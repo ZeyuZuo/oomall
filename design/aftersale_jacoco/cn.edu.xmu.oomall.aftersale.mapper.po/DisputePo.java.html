@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DisputePo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aftersale</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.aftersale.mapper.po</a> &gt; <span class="el_source">DisputePo.java</span></div><h1>DisputePo.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.aftersale.mapper.po;
+
+import cn.edu.xmu.oomall.aftersale.dao.bo.Dispute;
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = &quot;dispute&quot;)
+<span class="fc" id="L15">@ToString</span>
+@CopyFrom({Dispute.class})
+<span class="fc" id="L17">public class DisputePo</span>
+{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String C_Description;
+    private String S_Description;
+    private Byte status;
+    private Byte result;//仲裁结果 0不同意 1同意
+    private LocalDateTime finishDate;
+    private LocalDateTime acceptDate;
+    private LocalDateTime applyDate;
+    private LocalDateTime replyDate;
+
+    //afterSale
+    private Long afterSaleId;
+
+    //customer
+    private Long customerId;
+
+    //shop
+    private Long shopId;
+    // 创建者id
+    private Long creatorId;
+    // 创建者
+    private String creatorName;
+    // 修改者id
+    private Long modifierId;
+    // 修改者
+    private String modifierName;
+    // 创建时间
+    private LocalDateTime gmtCreate;
+    // 修改时间
+    private LocalDateTime gmtModified;
+
+    //所有属性的getter和setter
+    public Long getId()
+    {
+<span class="fc" id="L55">        return id;</span>
+    }
+
+    public void setId(Long id)
+    {
+<span class="fc" id="L60">        this.id = id;</span>
+<span class="fc" id="L61">    }</span>
+
+    public String getC_Description()
+    {
+<span class="fc" id="L65">        return C_Description;</span>
+    }
+
+    public void setC_Description(String c_Description)
+    {
+<span class="fc" id="L70">        C_Description = c_Description;</span>
+<span class="fc" id="L71">    }</span>
+
+    public String getS_Description()
+    {
+<span class="fc" id="L75">        return S_Description;</span>
+    }
+
+    public void setS_Description(String s_Description)
+    {
+<span class="fc" id="L80">        S_Description = s_Description;</span>
+<span class="fc" id="L81">    }</span>
+
+    public Byte getStatus()
+    {
+<span class="fc" id="L85">        return status;</span>
+    }
+
+    public void setStatus(Byte status)
+    {
+<span class="fc" id="L90">        this.status = status;</span>
+<span class="fc" id="L91">    }</span>
+
+    public Byte getResult()
+    {
+<span class="fc" id="L95">        return result;</span>
+    }
+
+    public void setResult(Byte result)
+    {
+<span class="fc" id="L100">        this.result = result;</span>
+<span class="fc" id="L101">    }</span>
+
+    public LocalDateTime getFinishDate()
+    {
+<span class="fc" id="L105">        return finishDate;</span>
+    }
+
+    public void setFinishDate(LocalDateTime FinishDate)
+    {
+<span class="fc" id="L110">        this.finishDate = finishDate;</span>
+<span class="fc" id="L111">    }</span>
+
+    public LocalDateTime getAcceptDate()
+    {
+<span class="fc" id="L115">        return acceptDate;</span>
+    }
+
+    public void setAcceptDate(LocalDateTime acceptDate)
+    {
+<span class="fc" id="L120">        this.acceptDate = acceptDate;</span>
+<span class="fc" id="L121">    }</span>
+
+    public LocalDateTime getReplyDate()
+    {
+<span class="fc" id="L125">        return replyDate;</span>
+    }
+
+    public void setReplyDate(LocalDateTime replyDate)
+    {
+<span class="fc" id="L130">        this.replyDate = replyDate;</span>
+<span class="fc" id="L131">    }</span>
+
+    //customer
+    public Long getCustomerId()
+    {
+<span class="fc" id="L136">        return customerId;</span>
+    }
+
+    public void setCustomerId(Long customerId)
+    {
+<span class="fc" id="L141">        this.customerId = customerId;</span>
+<span class="fc" id="L142">    }</span>
+
+
+    //shop
+    public Long getShopId()
+    {
+<span class="fc" id="L148">        return shopId;</span>
+    }
+
+    public void setShopId(Long shopId)
+    {
+<span class="fc" id="L153">        this.shopId = shopId;</span>
+<span class="fc" id="L154">    }</span>
+
+    //afterSale
+    public Long getAfterSaleId()
+    {
+<span class="fc" id="L159">        return afterSaleId;</span>
+    }
+
+    public void setAfterSaleId(Long afterSaleId)
+    {
+<span class="fc" id="L164">        this.afterSaleId = afterSaleId;</span>
+<span class="fc" id="L165">    }</span>
+
+
+    public LocalDateTime getApplyDate()
+    {
+<span class="fc" id="L170">        return applyDate;</span>
+    }
+
+    public void setApplyDate(LocalDateTime applyDate)
+    {
+<span class="fc" id="L175">        this.applyDate = applyDate;</span>
+<span class="fc" id="L176">    }</span>
+
+    public Long getCreatorId()
+    {
+<span class="fc" id="L180">        return creatorId;</span>
+    }
+
+    public void setCreatorId(Long creatorId)
+    {
+<span class="nc" id="L185">        this.creatorId = creatorId;</span>
+<span class="nc" id="L186">    }</span>
+
+    public String getCreatorName()
+    {
+<span class="fc" id="L190">        return creatorName;</span>
+    }
+
+    public void setCreatorName(String creatorName)
+    {
+<span class="nc" id="L195">        this.creatorName = creatorName;</span>
+<span class="nc" id="L196">    }</span>
+
+    public Long getModifierId()
+    {
+<span class="fc" id="L200">        return modifierId;</span>
+    }
+
+    public void setModifierId(Long modifierId)
+    {
+<span class="nc" id="L205">        this.modifierId = modifierId;</span>
+<span class="nc" id="L206">    }</span>
+
+    public String getModifierName()
+    {
+<span class="fc" id="L210">        return modifierName;</span>
+    }
+
+    public void setModifierName(String modifierName)
+    {
+<span class="nc" id="L215">        this.modifierName = modifierName;</span>
+<span class="nc" id="L216">    }</span>
+
+    public LocalDateTime getGmtCreate()
+    {
+<span class="fc" id="L220">        return gmtCreate;</span>
+    }
+
+    public void setGmtCreate(LocalDateTime gmtCreate)
+    {
+<span class="nc" id="L225">        this.gmtCreate = gmtCreate;</span>
+<span class="nc" id="L226">    }</span>
+
+    public LocalDateTime getGmtModified()
+    {
+<span class="fc" id="L230">        return gmtModified;</span>
+    }
+
+    public void setGmtModified(LocalDateTime gmtModified)
+    {
+<span class="nc" id="L235">        this.gmtModified = gmtModified;</span>
+<span class="nc" id="L236">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

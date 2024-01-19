@@ -1,0 +1,56 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+service,cn.edu.xmu.oomall.service.dao,ServiceOrderDao.OnSpotFactory,0,23,0,0,0,5,0,3,0,3
+service,cn.edu.xmu.oomall.service.dao,ServiceOrderDao.ServiceOrderFactory,0,6,0,0,0,1,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao,ServiceOrderDao,35,220,3,9,4,55,4,13,1,10
+service,cn.edu.xmu.oomall.service.dao,ProductServiceDao,23,120,3,7,3,28,3,7,0,5
+service,cn.edu.xmu.oomall.service.dao,MaintainerDao,19,86,1,3,1,22,1,5,0,4
+service,cn.edu.xmu.oomall.service.dao,ServiceOrderDao.SendFactory,0,23,0,0,0,5,0,3,0,3
+service,cn.edu.xmu.oomall.service.service,ServiceOrderService,6,124,1,13,1,30,1,11,0,5
+service,cn.edu.xmu.oomall.service.service,MaintainerService,0,86,0,8,0,17,0,7,0,3
+service,cn.edu.xmu.oomall.service.mapper.openfeign.po,Express,6,32,0,0,2,5,2,9,2,9
+service,cn.edu.xmu.oomall.service.mapper.openfeign.po,AfterSale,3,29,0,0,1,11,1,8,1,8
+service,cn.edu.xmu.oomall.service.mapper.openfeign.po,Consignee,27,19,0,0,5,2,5,5,5,5
+service,cn.edu.xmu.oomall.service.mapper.openfeign.po,Region,0,10,0,0,0,4,0,3,0,3
+service,cn.edu.xmu.oomall.service.dao.openfeign,RegionDao,14,42,2,2,2,11,2,3,0,3
+service,cn.edu.xmu.oomall.service.dao.openfeign,AfterSaleDao,7,47,1,3,1,12,1,4,0,3
+service,cn.edu.xmu.oomall.service.dao.openfeign,ExpressDao,32,40,3,1,6,11,3,2,1,2
+service,cn.edu.xmu.oomall.service.controller,InternalServiceController,0,33,0,0,0,7,0,2,0,2
+service,cn.edu.xmu.oomall.service.controller,AdminServiceController,0,82,0,4,0,12,0,5,0,3
+service,cn.edu.xmu.oomall.service.controller,MaintainerServiceController,0,39,0,0,0,9,0,3,0,3
+service,cn.edu.xmu.oomall.service.controller.vo,ServiceOrderCreateVo.Consignee,4,27,0,0,2,11,1,8,1,8
+service,cn.edu.xmu.oomall.service.controller.vo,ServiceOrderCreateVo,0,17,0,0,0,7,0,5,0,5
+service,cn.edu.xmu.oomall.service.controller.vo,MaintainerMessageVo,12,19,0,0,4,2,4,5,4,5
+service,cn.edu.xmu.oomall.service.controller.Dto,SimpleServiceOrderDto.SimpleServiceOrderDtoBuilder,36,0,0,0,1,0,6,0,6,0
+service,cn.edu.xmu.oomall.service.controller.Dto,MaintainerMessageDto,43,15,0,0,3,5,6,5,6,5
+service,cn.edu.xmu.oomall.service.controller.Dto,ServiceOrderCreateDto,17,17,0,0,2,7,2,5,2,5
+service,cn.edu.xmu.oomall.service.controller.Dto,ServiceOrderCreateDto.Consignee,31,0,0,0,13,0,9,0,9,0
+service,cn.edu.xmu.oomall.service.controller.Dto,SimpleServiceOrderDto,16,24,0,0,2,10,2,7,2,7
+service,cn.edu.xmu.javaee.core.util,CloneFactory,97,468,0,0,25,122,2,10,2,10
+service,cn.edu.xmu.oomall.service.mapper.po,ServiceOrderPo.ServiceOrderPoBuilder,261,0,0,0,1,0,31,0,31,0
+service,cn.edu.xmu.oomall.service.mapper.po,Consignee,46,0,0,0,12,0,10,0,10,0
+service,cn.edu.xmu.oomall.service.mapper.po,ProductServicePo.ProductServicePoBuilder,153,0,0,0,1,0,19,0,19,0
+service,cn.edu.xmu.oomall.service.mapper.po,ProductServicePo,91,78,0,0,18,33,12,23,12,23
+service,cn.edu.xmu.oomall.service.mapper.po,MaintainerPo,82,57,0,0,18,24,12,17,12,17
+service,cn.edu.xmu.oomall.service.mapper.po,MaintainerPo.MaintainerPoBuilder,126,0,0,0,1,0,16,0,16,0
+service,cn.edu.xmu.oomall.service.mapper.po,ServiceOrderPo,126,163,0,0,17,70,12,47,12,47
+service,cn.edu.xmu.oomall.service.dao.bo,Maintainer.2.new HashSet() {...},0,10,0,0,0,3,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,SendServiceOrder,62,236,3,1,16,88,8,48,6,48
+service,cn.edu.xmu.oomall.service.dao.bo,Maintainer.2.new HashSet() {...},0,14,0,0,0,4,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,Maintainer,80,156,7,5,10,51,7,25,3,23
+service,cn.edu.xmu.oomall.service.dao.bo,ServiceOrder.new HashMap() {...},0,23,0,0,0,6,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,ServiceOrder.new HashMap() {...},0,13,0,0,0,4,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,ServiceOrder.new HashMap() {...},0,19,0,0,0,4,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,ServiceOrder,254,176,9,7,85,41,58,11,52,9
+service,cn.edu.xmu.oomall.service.dao.bo,Maintainer.new HashMap() {...},0,19,0,0,0,4,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,ProductService.new HashMap() {...},0,18,0,0,0,5,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,ServiceOrder.3.new HashSet() {...},0,18,0,0,0,5,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,Maintainer.new HashMap() {...},0,18,0,0,0,5,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,ServiceOrder.3.new HashSet() {...},0,14,0,0,0,4,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,ProductService,16,167,6,4,6,53,6,28,1,28
+service,cn.edu.xmu.oomall.service.dao.bo,OnSpotServiceOrder,18,203,0,2,7,81,5,50,5,49
+service,cn.edu.xmu.oomall.service.dao.bo,ProductService.2.new HashSet() {...},0,14,0,0,0,4,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,ProductService.2.new HashSet() {...},0,10,0,0,0,3,0,1,0,1
+service,cn.edu.xmu.oomall.service.dao.bo,ProductService.new HashMap() {...},0,19,0,0,0,4,0,1,0,1
+service,cn.edu.xmu.oomall.service,ServiceApplication,5,3,0,0,2,1,1,1,1,1
+service,cn.edu.xmu.oomall.service.mapper.Param,PostExpressParam,156,15,30,0,6,2,24,4,9,4
+service,cn.edu.xmu.oomall.service.mapper.Param,PostExpressParam.PostExpressParamBuilder,36,0,0,0,1,0,6,0,6,0

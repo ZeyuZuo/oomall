@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminServiceController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">service</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.service.controller</a> &gt; <span class="el_source">AdminServiceController.java</span></div><h1>AdminServiceController.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.service.controller;
+
+import cn.edu.xmu.javaee.core.aop.Audit;
+import cn.edu.xmu.javaee.core.aop.LoginUser;
+import cn.edu.xmu.javaee.core.exception.BusinessException;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.ReturnObject;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.oomall.service.service.MaintainerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
+
+@RestController /*Restful的Controller对象*/
+@RequestMapping(value = &quot;/shops/{shopId}&quot;, produces = &quot;application/json;charset=UTF-8&quot;)
+@Transactional
+public class AdminServiceController {
+<span class="fc" id="L22">    private final Logger logger = LoggerFactory.getLogger(AdminServiceController.class);</span>
+
+    private final MaintainerService maintainerService;
+
+    @Autowired
+<span class="fc" id="L27">    public AdminServiceController(MaintainerService maintainerService) {</span>
+<span class="fc" id="L28">        this.maintainerService = maintainerService;</span>
+<span class="fc" id="L29">    }</span>
+
+    /**
+     * 暂停服务商
+     */
+    @PutMapping(&quot;/maintainers/{id}/suspend&quot;)
+    @Audit(departName = &quot;admin&quot;)
+    public ReturnObject suspendMaintainerById(@PathVariable Long shopId, @PathVariable Long id, @LoginUser UserDto user) {
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (!PLATFORM.equals(shopId)) {</span>
+<span class="fc" id="L38">            throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, String.format(ReturnNo.RESOURCE_ID_OUTSCOPE.getMessage(), &quot;服务&quot;, id, shopId));</span>
+        }
+<span class="fc" id="L40">        this.maintainerService.suspendMaintainer(id, user);</span>
+<span class="fc" id="L41">        return new ReturnObject(ReturnNo.OK);</span>
+    }
+
+    /**
+     * 撤销服务商
+     */
+    @DeleteMapping(&quot;/maintainers/{id}/cancel&quot;)
+    @Audit(departName = &quot;admin&quot;)
+    public ReturnObject cancelMaintainerById(@PathVariable Long shopId, @PathVariable Long id, @LoginUser UserDto user) {
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (!PLATFORM.equals(shopId)) {</span>
+<span class="fc" id="L51">            throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, String.format(ReturnNo.RESOURCE_ID_OUTSCOPE.getMessage(), &quot;服务&quot;, id, shopId));</span>
+        }
+<span class="fc" id="L53">        this.maintainerService.cancelMaintainer(id, user);</span>
+<span class="fc" id="L54">        return new ReturnObject(ReturnNo.OK);</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Dispute.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aftersale</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.aftersale.dao.bo</a> &gt; <span class="el_source">Dispute.java</span></div><h1>Dispute.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.aftersale.dao.bo;
+
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
+import cn.edu.xmu.oomall.aftersale.dao.AfterSaleDao;
+import cn.edu.xmu.oomall.aftersale.dao.openfeign.CustomerDao;
+import cn.edu.xmu.oomall.aftersale.dao.openfeign.ShopDao;
+import cn.edu.xmu.oomall.aftersale.mapper.openfeign.po.Customer;
+import cn.edu.xmu.oomall.aftersale.mapper.openfeign.po.Shop;
+import cn.edu.xmu.oomall.aftersale.mapper.po.DisputePo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+
+<span class="fc" id="L26">@NoArgsConstructor</span>
+<span class="fc" id="L27">@ToString(callSuper = true, doNotUseGetters = true)</span>
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@CopyFrom({DisputePo.class})
+public class Dispute extends OOMallObject implements Serializable {
+    private String C_Description;
+    private String S_Description;
+    private Byte status;
+    private Byte result;//仲裁结果 0不同意 1同意
+
+    private LocalDateTime finishDate;
+    private LocalDateTime acceptDate;
+    private LocalDateTime applyDate;
+    private LocalDateTime replyDate;
+
+    //afterSale
+    private Long afterSaleId;
+    private AfterSale afterSale;
+    private AfterSaleDao afterSaleDao;
+
+    //customer
+    private Long customerId;
+    private Customer customer;
+    private CustomerDao customerDao;
+
+    //shop
+    private Long shopId;
+    private Shop shop;
+    private ShopDao shopDao;
+
+    /**
+     * 共五种状态
+     */
+    //待审核
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L62">    public static final Byte PRE_AUDIT = 0;</span>
+    //待应诉
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L66">    public static final Byte PRE_SUIT = 1;</span>
+    //处理中
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L70">    public static final Byte GOING = 2;</span>
+    //已完成
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L74">    public static final Byte FINISHED = 3;</span>
+    //被取消
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L78">    public static final Byte CANCELLED = 4;</span>
+
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L82">    public static final Map&lt;Byte, String&gt; STATUSNAMES = new HashMap&lt;&gt;() {</span>
+        {
+<span class="fc" id="L84">            put(PRE_AUDIT, &quot;待审核&quot;);</span>
+<span class="fc" id="L85">            put(PRE_SUIT, &quot;待应诉&quot;);</span>
+<span class="fc" id="L86">            put(GOING, &quot;处理中&quot;);</span>
+<span class="fc" id="L87">            put(FINISHED, &quot;已完成&quot;);</span>
+<span class="fc" id="L88">            put(CANCELLED, &quot;被取消&quot;);</span>
+<span class="fc" id="L89">        }</span>
+    };
+
+    /**
+     * 允许的状态迁移
+     */
+    @JsonIgnore
+    @ToString.Exclude
+<span class="fc" id="L97">    private static final Map&lt;Byte, Set&lt;Byte&gt;&gt; toStatus = new HashMap&lt;&gt;(){</span>
+        {
+<span class="fc" id="L99">            put(PRE_AUDIT, new HashSet&lt;&gt;() {</span>
+                {
+<span class="fc" id="L101">                    add(PRE_SUIT);</span>
+<span class="fc" id="L102">                    add(CANCELLED); // 顾客取消</span>
+<span class="fc" id="L103">                }</span>
+            });
+<span class="fc" id="L105">            put(PRE_SUIT, new HashSet&lt;&gt;() {</span>
+                {
+<span class="fc" id="L107">                    add(GOING);</span>
+<span class="fc" id="L108">                    add(CANCELLED); // 商户取消</span>
+<span class="fc" id="L109">                }</span>
+            });
+<span class="fc" id="L111">            put(GOING, new HashSet&lt;&gt;() {</span>
+                {
+<span class="fc" id="L113">                    add(FINISHED);</span>
+<span class="fc" id="L114">                    add(CANCELLED);</span>
+<span class="fc" id="L115">                }</span>
+            });
+<span class="fc" id="L117">        }</span>
+    };
+
+    /**
+     * 是否允许状态迁移
+     * @param status
+     * @return
+     */
+    public boolean allowStatus(Byte status) {
+<span class="nc" id="L126">        boolean ret = false;</span>
+
+<span class="nc bnc" id="L128" title="All 4 branches missed.">        if (null != status &amp;&amp; null != this.status) {</span>
+<span class="nc" id="L129">            Set&lt;Byte&gt; allowStatusSet = toStatus.get(this.status);</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            if (null != allowStatusSet) {</span>
+<span class="nc" id="L131">                ret = allowStatusSet.contains(status);</span>
+            }
+        }
+<span class="nc" id="L134">        return ret;</span>
+    }
+
+<span class="fc" id="L137">    public Dispute(AfterSale afterSale, String reason){</span>
+        // TODO
+<span class="fc" id="L139">        this.C_Description = reason;</span>
+<span class="fc" id="L140">        this.status = PRE_AUDIT;</span>
+<span class="fc" id="L141">        this.applyDate = LocalDateTime.now();</span>
+<span class="fc" id="L142">        this.afterSaleId = afterSale.getId();</span>
+<span class="fc" id="L143">        this.customer = afterSale.getCustomer();</span>
+<span class="fc" id="L144">        this.shop = afterSale.getShop();</span>
+<span class="fc" id="L145">    }</span>
+
+    //所有属性的getter和setter
+    public Long getId() {
+<span class="fc" id="L149">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L153">        this.id = id;</span>
+<span class="fc" id="L154">    }</span>
+
+    public String getC_Description() {
+<span class="fc" id="L157">        return C_Description;</span>
+    }
+    public void setC_Description(String c_Description) {
+<span class="fc" id="L160">        C_Description = c_Description;</span>
+<span class="fc" id="L161">    }</span>
+
+    public String getS_Description() {
+<span class="fc" id="L164">        return S_Description;</span>
+    }
+    public void setS_Description(String s_Description) {
+<span class="fc" id="L167">        S_Description = s_Description;</span>
+<span class="fc" id="L168">    }</span>
+
+    public Byte getStatus() {
+<span class="fc" id="L171">        return status;</span>
+    }
+    public void setStatus(Byte status) {
+<span class="fc" id="L174">        this.status = status;</span>
+<span class="fc" id="L175">    }</span>
+
+    public Byte getResult() {
+<span class="fc" id="L178">        return result;</span>
+    }
+    public void setResult(Byte result) {
+<span class="fc" id="L181">        this.result = result;</span>
+<span class="fc" id="L182">    }</span>
+
+    public LocalDateTime getAcceptDate() {
+<span class="fc" id="L185">        return acceptDate;</span>
+    }
+
+    public void setAcceptDate(LocalDateTime acceptDate) {
+<span class="fc" id="L189">        this.acceptDate = acceptDate;</span>
+<span class="fc" id="L190">    }</span>
+
+    public LocalDateTime getApplyDate() {
+<span class="fc" id="L193">        return applyDate;</span>
+    }
+
+    public void setApplyDate(LocalDateTime applyDate) {
+<span class="fc" id="L197">        this.applyDate = applyDate;</span>
+<span class="fc" id="L198">    }</span>
+
+    public LocalDateTime getReplyDate() {
+<span class="fc" id="L201">        return replyDate;</span>
+    }
+
+    public void setReplyDate(LocalDateTime replyDate) {
+<span class="fc" id="L205">        this.replyDate = replyDate;</span>
+<span class="fc" id="L206">    }</span>
+
+    public LocalDateTime getFinishDate() {
+<span class="fc" id="L209">        return finishDate;</span>
+    }
+
+    public void setFinishDate(LocalDateTime finishDate) {
+<span class="fc" id="L213">        this.finishDate = finishDate;</span>
+<span class="fc" id="L214">    }</span>
+
+    //customer
+    public Long getCustomerId() {
+<span class="fc" id="L218">        return customerId;</span>
+    }
+    public void setCustomerId(Long customerId) {
+<span class="fc" id="L221">        this.customerId = customerId;</span>
+<span class="fc" id="L222">    }</span>
+
+    public Customer getCustomer() {
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        if(this.customer == null){</span>
+<span class="nc" id="L226">            this.customer = customerDao.findById(customerId);</span>
+        }
+<span class="nc" id="L228">        return this.customer;</span>
+    }
+    public void setCustomer(Customer customer) {
+<span class="nc" id="L231">        this.customer = customer;</span>
+<span class="nc" id="L232">    }</span>
+
+    //shop
+    public Long getShopId() {
+<span class="fc" id="L236">        return shopId;</span>
+    }
+    public void setShopId(Long shopId) {
+<span class="fc" id="L239">        this.shopId = shopId;</span>
+<span class="fc" id="L240">    }</span>
+
+    public Shop getShop() {
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        if(this.shop == null){</span>
+<span class="nc" id="L244">            this.shop = shopDao.findById(shopId);</span>
+        }
+<span class="nc" id="L246">        return this.shop;</span>
+    }
+    public void setShop(Shop shop) {
+<span class="nc" id="L249">        this.shop = shop;</span>
+<span class="nc" id="L250">    }</span>
+    //afterSale
+    public Long getAfterSaleId() {
+<span class="fc" id="L253">        return afterSaleId;</span>
+    }
+    public void setAfterSaleId(Long afterSaleId) {
+<span class="fc" id="L256">        this.afterSaleId = afterSaleId;</span>
+<span class="fc" id="L257">    }</span>
+    public AfterSale getAfterSale() {
+<span class="nc bnc" id="L259" title="All 2 branches missed.">        if(this.afterSale == null){</span>
+<span class="nc" id="L260">            this.afterSale = afterSaleDao.findById(afterSaleId);</span>
+        }
+<span class="nc" id="L262">        return this.afterSale;</span>
+    }
+    public void setAfterSale(AfterSale afterSale) {
+<span class="nc" id="L265">        this.afterSale = afterSale;</span>
+<span class="nc" id="L266">    }</span>
+
+    @Override
+    public void setGmtCreate(LocalDateTime gmtCreate) {
+<span class="fc" id="L270">        this.gmtCreate = gmtCreate;</span>
+<span class="fc" id="L271">    }</span>
+
+    @Override
+    public void setGmtModified(LocalDateTime gmtModified) {
+<span class="fc" id="L275">        this.gmtModified = gmtModified;</span>
+<span class="fc" id="L276">    }</span>
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,56 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+aftersale,cn.edu.xmu.oomall.aftersale.dao.openfeign,CustomerDao,7,24,1,1,1,7,1,2,0,2
+aftersale,cn.edu.xmu.oomall.aftersale.dao.openfeign,RefundDao,33,27,3,1,6,7,3,2,1,2
+aftersale,cn.edu.xmu.oomall.aftersale.dao.openfeign,ServiceOrderDao,32,27,3,1,6,7,3,2,1,2
+aftersale,cn.edu.xmu.oomall.aftersale.dao.openfeign,ExpressDao,14,67,2,2,2,17,2,4,0,4
+aftersale,cn.edu.xmu.oomall.aftersale.dao.openfeign,ProductDao,7,24,1,1,1,7,1,2,0,2
+aftersale,cn.edu.xmu.oomall.aftersale.dao.openfeign,OrderItemDao,7,33,1,1,1,9,1,3,0,3
+aftersale,cn.edu.xmu.oomall.aftersale.dao.openfeign,ShopDao,7,24,1,1,1,7,1,2,0,2
+aftersale,cn.edu.xmu.oomall.aftersale.dao,AfterSaleDao.ChangeFactory,0,19,0,0,0,4,0,2,0,2
+aftersale,cn.edu.xmu.oomall.aftersale.dao,AfterSaleDao,26,192,2,4,2,49,2,8,0,7
+aftersale,cn.edu.xmu.oomall.aftersale.dao,AfterSaleDao.ReturnFactory,0,19,0,0,0,4,0,2,0,2
+aftersale,cn.edu.xmu.oomall.aftersale.dao,DisputeDao,7,87,2,4,2,23,2,5,0,4
+aftersale,cn.edu.xmu.oomall.aftersale.dao,AfterSaleDao.ServiceFactory,0,19,0,0,0,4,0,2,0,2
+aftersale,cn.edu.xmu.oomall.aftersale.dao,AfterSaleDao.AfterSaleFactory,0,6,0,0,0,1,0,1,0,1
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,Dispute,75,181,12,0,21,57,13,30,7,30
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,AfterSale.3.new HashSet() {...},0,18,0,0,0,5,0,1,0,1
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,AfterSale.3.new HashSet() {...},0,14,0,0,0,4,0,1,0,1
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,Dispute.2.new HashSet() {...},0,14,0,0,0,4,0,1,0,1
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,Dispute.2.new HashSet() {...},0,14,0,0,0,4,0,1,0,1
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,Dispute.2.new HashSet() {...},0,14,0,0,0,4,0,1,0,1
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,AfterSale,288,241,20,8,73,43,64,17,52,15
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,AfterSale.new HashMap() {...},0,19,0,0,0,4,0,1,0,1
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,ReturnAfterSale,57,330,6,16,13,86,7,59,3,52
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,AfterSale.new HashMap() {...},0,18,0,0,0,5,0,1,0,1
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,AfterSale.new HashMap() {...},0,23,0,0,0,6,0,1,0,1
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,Dispute.new HashMap() {...},0,27,0,0,0,5,0,1,0,1
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,ServiceAfterSale,145,212,17,1,32,58,20,51,11,51
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,Dispute.new HashMap() {...},0,28,0,0,0,7,0,1,0,1
+aftersale,cn.edu.xmu.oomall.aftersale.dao.bo,ChangeAfterSale,145,194,17,1,32,54,20,44,11,44
+aftersale,cn.edu.xmu.oomall.aftersale,AfterSaleApplication,5,3,0,0,2,1,1,1,1,1
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.params,PostServiceOrder.PostServiceOrderBuilder,27,0,0,0,1,0,5,0,5,0
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.params,PostExpressParam,156,15,30,0,6,2,24,4,9,4
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.params,PostServiceOrder,117,11,22,0,5,2,19,3,8,3
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.params,PostExpressParam.PostExpressParamBuilder,36,0,0,0,1,0,6,0,6,0
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.params,PostRefundParam.PostRefundParamBuilder,6,21,0,0,0,1,1,4,1,4
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.params,PostRefundParam,115,13,22,0,5,2,20,2,9,2
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.po,Express,0,38,0,0,0,7,0,11,0,11
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.po,Consignee,0,46,0,0,0,7,0,10,0,10
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.po,Customer,0,17,0,0,0,4,0,5,0,5
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.po,OrderItem,0,66,0,0,0,11,0,19,0,19
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.po,Refund,9,22,0,0,3,3,3,6,3,6
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.po,ServiceOrder,6,18,0,0,2,3,2,5,2,5
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.po,Product,0,17,0,0,0,4,0,5,0,5
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.openfeign.po,Shop,6,25,0,0,2,4,2,7,2,7
+aftersale,cn.edu.xmu.oomall.aftersale.controller.dto,AfterSaleDto,7,174,0,0,3,57,2,32,2,32
+aftersale,cn.edu.xmu.oomall.aftersale.controller.dto,ConfirmDto,0,31,0,0,0,13,0,9,0,9
+aftersale,cn.edu.xmu.oomall.aftersale.controller.dto,DisputeIdDto,0,10,0,0,0,4,0,3,0,3
+aftersale,cn.edu.xmu.oomall.aftersale.controller,DisputeController,0,30,0,0,0,7,0,3,0,3
+aftersale,cn.edu.xmu.oomall.aftersale.controller,ShopAfterSaleController,0,44,0,0,0,10,0,4,0,4
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.po,DisputePo,24,144,0,0,12,44,6,32,6,32
+aftersale,cn.edu.xmu.oomall.aftersale.mapper.po,AfterSalePo,20,220,0,0,10,70,5,49,5,49
+aftersale,cn.edu.xmu.oomall.aftersale.service,DisputeService,0,58,0,6,0,14,0,6,0,3
+aftersale,cn.edu.xmu.oomall.aftersale.service,AfterSaleService,12,58,2,8,2,16,2,6,0,3
+aftersale,cn.edu.xmu.javaee.core.util,CloneFactory,89,542,0,0,23,140,2,9,2,9
+aftersale,cn.edu.xmu.oomall.aftersale.controller.vo,ConfirmVo,0,31,0,0,0,13,0,9,0,9
+aftersale,cn.edu.xmu.oomall.aftersale.controller.vo,ReasonVo,0,10,0,0,0,4,0,3,0,3

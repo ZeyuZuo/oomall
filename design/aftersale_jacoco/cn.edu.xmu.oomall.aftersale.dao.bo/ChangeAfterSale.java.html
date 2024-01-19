@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChangeAfterSale.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aftersale</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.aftersale.dao.bo</a> &gt; <span class="el_source">ChangeAfterSale.java</span></div><h1>ChangeAfterSale.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.aftersale.dao.bo;
+
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.exception.BusinessException;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.oomall.aftersale.controller.dto.ConfirmDto;
+import cn.edu.xmu.oomall.aftersale.dao.AfterSaleDao;
+import cn.edu.xmu.oomall.aftersale.dao.openfeign.*;
+import cn.edu.xmu.oomall.aftersale.mapper.openfeign.po.*;
+import cn.edu.xmu.oomall.aftersale.mapper.po.AfterSalePo;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.LocalDateTime;
+
+<span class="fc" id="L20">@NoArgsConstructor</span>
+<span class="nc" id="L21">@ToString(callSuper = true, doNotUseGetters = true)</span>
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@CopyFrom({AfterSalePo.class})
+public class ChangeAfterSale extends AfterSale{
+    @Override
+    public void process(ConfirmDto confirmDto){
+        // TODO
+        // 换货需要生成物流单
+<span class="fc" id="L29">        Consignee sender = new Consignee();</span>
+<span class="fc" id="L30">        sender.setName(this.getName());</span>
+<span class="fc" id="L31">        sender.setMobile(this.getMobile());</span>
+<span class="fc" id="L32">        sender.setRegionId(this.getRegionId());</span>
+<span class="fc" id="L33">        sender.setAddress(this.getAddress());</span>
+
+<span class="fc" id="L35">        Consignee receiver = confirmDto.getConsignee();</span>
+<span class="fc" id="L36">        Express express = this.expressDao.createExpress(sender, receiver, this.getShopId());</span>
+
+<span class="fc" id="L38">        this.setSendOffExpressId(express.getId());</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if(this.allowStatus(GOING))</span>
+<span class="fc" id="L40">            this.setStatus(GOING);</span>
+        else
+<span class="nc" id="L42">            throw new BusinessException(ReturnNo.STATENOTALLOW, &quot;售后单状态禁止&quot;);</span>
+<span class="fc" id="L43">    }</span>
+
+//    @Autowired
+//    public ChangeAfterSale(ExpressDao expressDao, OrderItemDao orderItemDao, CustomerDao customerDao, ShopDao shopDao, ProductDao productDao, ServiceOrderDao serviceOrderDao, RefundDao refundDao){
+//        this.expressDao = expressDao;
+//        this.orderItemDao = orderItemDao;
+//        this.customerDao = customerDao;
+//        this.shopDao = shopDao;
+//        this.productDao = productDao;
+//        this.serviceOrderDao = serviceOrderDao;
+//        this.refundDao = refundDao;
+//    }
+
+<span class="fc" id="L56">    public Long getId(){return this.id;}</span>
+<span class="fc" id="L57">    public void setId(Long id){this.id=id;}</span>
+<span class="fc" id="L58">    public Byte getType(){return this.type;}</span>
+<span class="fc" id="L59">    public void setType(Byte type){this.type=type;}</span>
+<span class="fc" id="L60">    public Byte getStatus(){return this.status;}</span>
+<span class="fc" id="L61">    public void setStatus(Byte status){this.status=status;}</span>
+<span class="fc" id="L62">    public String getReason(){return this.reason;}</span>
+<span class="fc" id="L63">    public void setReason(String reason){this.reason=reason;}</span>
+<span class="fc" id="L64">    public String getConclusion(){return this.conclusion;}</span>
+<span class="fc" id="L65">    public void setConclusion(String conclusion){this.conclusion=conclusion;}</span>
+<span class="fc" id="L66">    public Integer getQuantity(){return this.quantity;}</span>
+<span class="fc" id="L67">    public void setQuantity(Integer quantity){this.quantity=quantity;}</span>
+<span class="fc" id="L68">    public Boolean getIsDisputing(){return this.isDisputing;}</span>
+<span class="fc" id="L69">    public void setIsDisputing(Boolean isDisputing){this.isDisputing=isDisputing;}</span>
+<span class="fc" id="L70">    public String getName(){return this.name;}</span>
+<span class="fc" id="L71">    public void setName(String name){this.name=name;}</span>
+<span class="fc" id="L72">    public String getMobile(){return this.mobile;}</span>
+<span class="fc" id="L73">    public void setMobile(String mobile){this.mobile=mobile;}</span>
+<span class="fc" id="L74">    public Long getRegionId(){return this.regionId;}</span>
+<span class="fc" id="L75">    public void setRegionId(Long regionId){this.regionId=regionId;}</span>
+<span class="fc" id="L76">    public String getAddress(){return this.address;}</span>
+<span class="fc" id="L77">    public void setAddress(String address){this.address=address;}</span>
+<span class="fc" id="L78">    public LocalDateTime getGmtCreate() {return gmtCreate;}</span>
+<span class="fc" id="L79">    public void setGmtCreate(LocalDateTime gmtCreate) {this.gmtCreate=gmtCreate;}</span>
+<span class="fc" id="L80">    public LocalDateTime getGmtModified() {return gmtModified;}</span>
+<span class="fc" id="L81">    public void setGmtModified(LocalDateTime gmtModified) {this.gmtModified=gmtModified;}</span>
+<span class="nc" id="L82">    public Consignee getConsignee() {return new Consignee(this.name, this.mobile, this.regionId, this.address);}</span>
+    public void setConsignee(Consignee consignee) {
+<span class="nc" id="L84">        this.name = consignee.getName();</span>
+<span class="nc" id="L85">        this.mobile = consignee.getMobile();</span>
+<span class="nc" id="L86">        this.regionId = consignee.getRegionId();</span>
+<span class="nc" id="L87">        this.address = consignee.getAddress();</span>
+<span class="nc" id="L88">    }</span>
+<span class="fc" id="L89">    public Long getCustomerId(){return this.customerId;}</span>
+<span class="fc" id="L90">    public void setCustomerId(Long customerId){this.customerId=customerId;}</span>
+    public Customer getCustomer(){
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if(this.customer==null){</span>
+<span class="nc" id="L93">            this.customer=customerDao.findById(this.customerId);</span>
+        }
+<span class="nc" id="L95">        return this.customer;</span>
+    }
+<span class="fc" id="L97">    public Long getOrderItemId(){return this.orderItemId;}</span>
+<span class="fc" id="L98">    public void setOrderItemId(Long orderItemId){this.orderItemId=orderItemId;}</span>
+    public OrderItem getOrderItem(){
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        if(this.orderItem==null){</span>
+<span class="nc" id="L101">            this.orderItem=orderItemDao.findById(this.orderItemId);</span>
+        }
+<span class="nc" id="L103">        return this.orderItem;</span>
+    }
+<span class="fc" id="L105">    public Long getSendOffExpressId(){return this.sendOffExpressId;}</span>
+<span class="fc" id="L106">    public void setSendOffExpressId(Long sendOffExpressId){this.sendOffExpressId=sendOffExpressId;}</span>
+
+<span class="fc" id="L108">    public Long getSendBackExpressId(){return this.sendBackExpressId;}</span>
+<span class="fc" id="L109">    public void setSendBackExpressId(Long sendBackExpressId){this.sendBackExpressId=sendBackExpressId;}</span>
+
+    public Express getSendOffExpress(){
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if(this.sendOffExpress==null){</span>
+<span class="nc" id="L113">            this.sendOffExpress=expressDao.findById(this.sendOffExpressId);</span>
+        }
+<span class="nc" id="L115">        return this.sendOffExpress;</span>
+    }
+    public Express getSendBackExpress(){
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if(this.sendBackExpress==null){</span>
+<span class="nc" id="L119">            this.sendBackExpress=expressDao.findById(this.sendBackExpressId);</span>
+        }
+<span class="nc" id="L121">        return this.sendBackExpress;</span>
+    }
+<span class="fc" id="L123">    public Long getServiceOrderId(){return this.serviceOrderId;}</span>
+<span class="fc" id="L124">    public void setServiceOrderId(Long serviceOrderId){this.serviceOrderId=serviceOrderId;}</span>
+    public ServiceOrder getServiceOrder(){
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if(this.serviceOrder==null){</span>
+<span class="nc" id="L127">            this.serviceOrder=serviceOrderDao.findById(this.serviceOrderId);</span>
+        }
+<span class="nc" id="L129">        return this.serviceOrder;</span>
+    }
+<span class="fc" id="L131">    public Long getShopId(){return this.shopId;}</span>
+<span class="fc" id="L132">    public void setShopId(Long shopId){this.shopId=shopId;}</span>
+    public Shop getShop(){
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if(this.shop==null){</span>
+<span class="nc" id="L135">            this.shop=shopDao.findById(this.shopId);</span>
+        }
+<span class="nc" id="L137">        return this.shop;</span>
+    }
+<span class="fc" id="L139">    public Long getProductId(){return this.productId;}</span>
+<span class="fc" id="L140">    public void setProductId(Long productId){this.productId=productId;}</span>
+    public Product getProduct(){
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if(this.product==null){</span>
+<span class="nc" id="L143">            this.product=productDao.findById(this.productId);</span>
+        }
+<span class="nc" id="L145">        return this.product;</span>
+    }
+<span class="fc" id="L147">    public Long getRefundId(){return this.refundId;}</span>
+<span class="fc" id="L148">    public void setRefundId(Long refundId){this.refundId=refundId;}</span>
+    public Refund getRefund(){
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if(this.refund == null){</span>
+<span class="nc" id="L151">            this.refund = refundDao.findById(this.shopId, this.refundId);</span>
+        }
+<span class="nc" id="L153">        return this.refund;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

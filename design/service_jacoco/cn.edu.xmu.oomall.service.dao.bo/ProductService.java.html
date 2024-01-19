@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">service</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.service.dao.bo</a> &gt; <span class="el_source">ProductService.java</span></div><h1>ProductService.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.service.dao.bo;
+
+import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.oomall.service.dao.MaintainerDao;
+import cn.edu.xmu.oomall.service.dao.ProductServiceDao;
+import cn.edu.xmu.oomall.service.mapper.po.MaintainerPo;
+import cn.edu.xmu.oomall.service.mapper.po.ProductServicePo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+<span class="fc" id="L30">@NoArgsConstructor</span>
+<span class="fc" id="L31">@ToString(callSuper = true, doNotUseGetters = true)</span>
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@CopyFrom({ProductServicePo.class})
+public class ProductService extends OOMallObject implements Serializable
+{
+
+    private Long id;
+    private Long productId;
+    private Long serviceId;
+    private Long maintainerId;
+    private Long regionId;
+    private Long shopId;
+    private LocalDateTime beginTime;
+    private LocalDateTime endTime;
+    private Byte serviceType;
+    private Byte status;    //0-VALID 1-SUSPENDED
+
+    //这里定义了一个用于记录日志的 Logger 对象。
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L51">    private final static Logger logger = LoggerFactory.getLogger(ProductService.class);</span>
+
+<span class="fc" id="L53">    @Setter</span>
+    @JsonIgnore
+    @ToString.Exclude
+    private ProductServiceDao productServiceDao;
+
+    /**
+     * 服务 共两种状态
+     */
+    //正常
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L64">    public static final Byte VALID = 0;</span>
+    //暂停
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L68">    public static final Byte SUSPENDED = 1;</span>
+
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L72">    public static final Byte CANCELED = 2 ;</span>
+
+    //类型名称映射：
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L77">    public static final Map&lt;Byte, String&gt; TYPENAMES = new HashMap&lt;&gt;()</span>
+<span class="fc" id="L78">    {</span>
+        {
+<span class="fc" id="L80">            put(VALID, &quot;正常&quot;);</span>
+<span class="fc" id="L81">            put(SUSPENDED, &quot;暂停&quot;);</span>
+<span class="fc" id="L82">            put(CANCELED, &quot;取消&quot;);</span>
+<span class="fc" id="L83">        }</span>
+    };
+
+    //允许的状态迁移
+    @JsonIgnore
+    @ToString.Exclude
+<span class="fc" id="L89">    private static final Map&lt;Byte, Set&lt;Byte&gt;&gt; toStatus = new HashMap&lt;&gt;()</span>
+<span class="fc" id="L90">    {</span>
+        {
+<span class="fc" id="L92">            put(VALID, new HashSet&lt;&gt;()</span>
+<span class="fc" id="L93">            {</span>
+                {
+<span class="fc" id="L95">                    add(SUSPENDED);</span>
+<span class="fc" id="L96">                }</span>
+            });
+<span class="fc" id="L98">            put(SUSPENDED, new HashSet&lt;&gt;()</span>
+<span class="fc" id="L99">            {</span>
+                {
+<span class="fc" id="L101">                    add(VALID);</span>
+<span class="fc" id="L102">                    add(CANCELED);</span>
+<span class="fc" id="L103">                }</span>
+            });
+<span class="fc" id="L105">        }</span>
+    };
+
+    /**
+     * 是否允许状态迁移
+     * @param status
+     * @return
+     */
+    public boolean allowStatus(Byte status)
+    {
+<span class="fc" id="L115">        boolean ret = false;</span>
+<span class="pc bpc" id="L116" title="2 of 4 branches missed.">        if (null != status &amp;&amp; null != this.status)</span>
+        {
+<span class="fc" id="L118">            Set&lt;Byte&gt; allowStatusSet = toStatus.get(this.status);</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">            if (null != allowStatusSet)</span>
+            {
+<span class="fc" id="L121">                ret = allowStatusSet.contains(status);</span>
+            }
+        }
+<span class="fc" id="L124">        return ret;</span>
+    }
+
+    public Long getId()
+    {
+<span class="fc" id="L129">        return id;</span>
+    }
+
+    public void setId(Long id)
+    {
+<span class="fc" id="L134">        id = id;</span>
+<span class="fc" id="L135">    }</span>
+
+    public Long getProductId()
+    {
+<span class="fc" id="L139">        return productId;</span>
+    }
+
+    public void setProductId(Long productId)
+    {
+<span class="fc" id="L144">        this.productId = productId;</span>
+<span class="fc" id="L145">    }</span>
+
+    public Long getServiceId()
+    {
+<span class="fc" id="L149">        return serviceId;</span>
+    }
+
+    public void setServiceId(Long serviceId)
+    {
+<span class="fc" id="L154">        this.serviceId = serviceId;</span>
+<span class="fc" id="L155">    }</span>
+
+    public Long getMaintainerId()
+    {
+<span class="fc" id="L159">        return maintainerId;</span>
+    }
+
+    public void setMaintainerId(Long maintainerId)
+    {
+<span class="fc" id="L164">        this.maintainerId = maintainerId;</span>
+<span class="fc" id="L165">    }</span>
+
+    public void setServiceType(Byte serviceType) {
+<span class="fc" id="L168">        this.serviceType = serviceType;</span>
+<span class="fc" id="L169">    }</span>
+
+    public Byte getServiceType() {
+<span class="fc" id="L172">        return serviceType;</span>
+    }
+
+    public Long getRegionId()
+    {
+<span class="fc" id="L177">        return regionId;</span>
+    }
+
+    public void setRegionId(Long regionId)
+    {
+<span class="fc" id="L182">        this.regionId = regionId;</span>
+<span class="fc" id="L183">    }</span>
+
+    public Long getShopId()
+    {
+<span class="fc" id="L187">        return shopId;</span>
+    }
+
+    public void setShopId(Long shopId)
+    {
+<span class="fc" id="L192">        this.shopId = shopId;</span>
+<span class="fc" id="L193">    }</span>
+
+    public LocalDateTime getBeginTime()
+    {
+<span class="fc" id="L197">        return beginTime;</span>
+    }
+
+    public void setBeginTime(LocalDateTime beginTime)
+    {
+<span class="fc" id="L202">        this.beginTime = beginTime;</span>
+<span class="fc" id="L203">    }</span>
+
+    public LocalDateTime getEndTime()
+    {
+<span class="fc" id="L207">        return endTime;</span>
+    }
+
+    public void setEndTime(LocalDateTime endTime)
+    {
+<span class="fc" id="L212">        this.endTime = endTime;</span>
+<span class="fc" id="L213">    }</span>
+
+    public Byte getStatus()
+    {
+<span class="fc" id="L217">        return status;</span>
+    }
+
+    public void setStatus(Byte status)
+    {
+<span class="fc" id="L222">        this.status = status;</span>
+<span class="fc" id="L223">    }</span>
+
+    public void setGmtModified(LocalDateTime gmtModified)
+    {
+<span class="fc" id="L227">        this.gmtModified = gmtModified;</span>
+<span class="fc" id="L228">    }</span>
+
+    public void setGmtCreate(LocalDateTime gmtCreate)
+    {
+<span class="fc" id="L232">        this.gmtCreate = gmtCreate;</span>
+<span class="fc" id="L233">    }</span>
+
+    /**
+     * 暂停productService
+     */
+    public void suspend(UserDto user){
+<span class="pc bpc" id="L239" title="1 of 2 branches missed.">        if(!allowStatus(SUSPENDED))</span>
+        {
+<span class="nc" id="L241">            return;</span>
+        }
+<span class="fc" id="L243">        setStatus(SUSPENDED);</span>
+<span class="fc" id="L244">        this.productServiceDao.save(this,user);</span>
+<span class="fc" id="L245">    }</span>
+
+    public void cancel(UserDto user){
+<span class="nc bnc" id="L248" title="All 2 branches missed.">        if(!allowStatus(CANCELED))</span>
+        {
+<span class="nc" id="L250">            return;</span>
+        }
+<span class="nc" id="L252">        setStatus(CANCELED);</span>
+<span class="nc" id="L253">        this.productServiceDao.save(this,user);</span>
+<span class="nc" id="L254">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

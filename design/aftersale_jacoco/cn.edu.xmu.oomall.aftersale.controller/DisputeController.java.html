@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DisputeController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aftersale</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.aftersale.controller</a> &gt; <span class="el_source">DisputeController.java</span></div><h1>DisputeController.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.aftersale.controller;
+
+import cn.edu.xmu.javaee.core.aop.Audit;
+import cn.edu.xmu.javaee.core.aop.LoginUser;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.ReturnObject;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.javaee.core.util.CloneFactory;
+import cn.edu.xmu.oomall.aftersale.controller.dto.AfterSaleDto;
+import cn.edu.xmu.oomall.aftersale.controller.dto.ConfirmDto;
+import cn.edu.xmu.oomall.aftersale.controller.dto.DisputeIdDto;
+import cn.edu.xmu.oomall.aftersale.controller.vo.ConfirmVo;
+import cn.edu.xmu.oomall.aftersale.controller.vo.ReasonVo;
+import cn.edu.xmu.oomall.aftersale.dao.bo.AfterSale;
+import cn.edu.xmu.oomall.aftersale.dao.bo.Dispute;
+import cn.edu.xmu.oomall.aftersale.service.AfterSaleService;
+import cn.edu.xmu.oomall.aftersale.service.DisputeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@Transactional
+public class DisputeController {
+    private DisputeService disputeService;
+<span class="fc" id="L28">    private final static Logger logger = LoggerFactory.getLogger(ShopAfterSaleController.class);</span>
+
+    @Autowired
+<span class="fc" id="L31">    public DisputeController(DisputeService disputeService){</span>
+<span class="fc" id="L32">        this.disputeService = disputeService;</span>
+<span class="fc" id="L33">    }</span>
+
+    @PostMapping(&quot;aftersales/{id}/disputes&quot;)
+    public ReturnObject createDispute(@PathVariable Long id,
+                                      @RequestBody ReasonVo reasonVo,
+                                      @LoginUser UserDto userDto){
+<span class="fc" id="L39">        Dispute dispute = this.disputeService.createDispute(id,reasonVo.getReason(),userDto);</span>
+<span class="fc" id="L40">        DisputeIdDto disputeIdDto = CloneFactory.copy(new DisputeIdDto(),dispute);</span>
+<span class="fc" id="L41">        return new ReturnObject(ReturnNo.CREATED, disputeIdDto);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

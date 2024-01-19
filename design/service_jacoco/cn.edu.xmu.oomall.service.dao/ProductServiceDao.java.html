@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductServiceDao.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">service</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.service.dao</a> &gt; <span class="el_source">ProductServiceDao.java</span></div><h1>ProductServiceDao.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.service.dao;
+
+import cn.edu.xmu.javaee.core.exception.BusinessException;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.oomall.service.dao.bo.Maintainer;
+import cn.edu.xmu.oomall.service.dao.bo.ProductService;
+import cn.edu.xmu.oomall.service.mapper.jpa.MaintainerPoMapper;
+import cn.edu.xmu.oomall.service.mapper.jpa.ProductServicePoMapper;
+import cn.edu.xmu.oomall.service.mapper.po.MaintainerPo;
+import cn.edu.xmu.oomall.service.mapper.po.ProductServicePo;
+import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import cn.edu.xmu.javaee.core.util.CloneFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static cn.edu.xmu.javaee.core.model.Constants.IDNOTEXIST;
+
+
+@Repository
+public class ProductServiceDao {
+    private final static String KEY = &quot;R%d&quot;;
+<span class="fc" id="L30">    private final static Logger logger = LoggerFactory.getLogger(ProductServiceDao.class);</span>
+
+    private ProductServicePoMapper ProductServicePoMapper;
+    @Autowired
+<span class="fc" id="L34">    public ProductServiceDao(ProductServicePoMapper ProductServicePoMapper) {</span>
+<span class="fc" id="L35">        this.ProductServicePoMapper = ProductServicePoMapper;</span>
+<span class="fc" id="L36">    }</span>
+    public List&lt;ProductService&gt; findByMaintainerId(Long Mid) {
+<span class="fc" id="L38">        List&lt;ProductServicePo&gt; poList = this.ProductServicePoMapper.findByMaintainerId(Mid);</span>
+
+        // 检查poList是否为null
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        if (poList == null) {</span>
+<span class="nc" id="L42">            return null;</span>
+        }
+
+<span class="fc" id="L45">        List&lt;ProductService&gt; boList = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        for (ProductServicePo po : poList) {</span>
+<span class="fc" id="L48">            ProductService bo = CloneFactory.copy(new ProductService(), po);</span>
+<span class="fc" id="L49">            bo.setProductServiceDao(this);</span>
+<span class="fc" id="L50">            boList.add(bo);</span>
+<span class="fc" id="L51">        }</span>
+
+<span class="fc" id="L53">        return boList;</span>
+    }
+
+    public String save(ProductService bo, UserDto user){
+<span class="fc" id="L57">        bo.setModifier(user);</span>
+<span class="fc" id="L58">        bo.setGmtModified(LocalDateTime.now());</span>
+<span class="fc" id="L59">        ProductServicePo po = CloneFactory.copy(new ProductServicePo(), bo);</span>
+<span class="fc" id="L60">        logger.debug(&quot;save: po = {}&quot;, po);</span>
+<span class="fc" id="L61">        ProductServicePo updatedPo = ProductServicePoMapper.save(po);</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if(IDNOTEXIST.equals(updatedPo.getId())){</span>
+<span class="nc" id="L63">            throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), &quot;服务&quot;, bo.getId()));</span>
+        }
+<span class="fc" id="L65">        return String.format(KEY, bo.getId());</span>
+    }
+
+    /**
+     * 获取ProductServiceList
+     * @param serviceType
+     * @param productId
+     * @param shopId
+     * @return
+     */
+    public List&lt;ProductService&gt; findByServiceTypeAndProductIdAndShopId(Byte serviceType,Long productId,Long shopId){
+<span class="fc" id="L76">        List&lt;ProductServicePo&gt; poList = this.ProductServicePoMapper.findByServiceTypeAndProductIdAndShopId(serviceType,productId,shopId);</span>
+
+        // 检查poList是否为null
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if (poList == null) {</span>
+<span class="nc" id="L80">            return null;</span>
+        }
+<span class="fc" id="L82">        List&lt;ProductService&gt; boList = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        for (ProductServicePo po : poList) {</span>
+<span class="fc" id="L84">            ProductService bo = CloneFactory.copy(new ProductService(), po);</span>
+<span class="fc" id="L85">            boList.add(bo);</span>
+<span class="fc" id="L86">        }</span>
+<span class="fc" id="L87">        return boList;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

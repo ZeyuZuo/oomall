@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AfterSalePo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aftersale</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.aftersale.mapper.po</a> &gt; <span class="el_source">AfterSalePo.java</span></div><h1>AfterSalePo.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.aftersale.mapper.po;
+
+import cn.edu.xmu.oomall.aftersale.dao.bo.AfterSale;
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = &quot;aftersale&quot;)
+<span class="fc" id="L15">@ToString(callSuper = true, doNotUseGetters = true)</span>
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@CopyFrom({AfterSale.class})
+<span class="fc" id="L18">public class AfterSalePo</span>
+{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Byte type;
+    private Byte status;
+    private String reason;
+    private String conclusion;
+    private Integer quantity;
+    private Boolean isDisputing;
+    private String name;
+    private String mobile;
+    private Long regionId;
+    private String address;
+    private String afterSaleSn;
+
+    private Long customerId;
+    private Long shopId;
+    private Long productId;
+    private Long orderItemId;
+    private Long sendOffExpressId;
+    private Long sendBackExpressId;
+    private Long refundId;
+    private Long serviceOrderId;
+    // 创建者id
+    private Long creatorId;
+    // 创建者
+    private String creatorName;
+    // 修改者id
+    private Long modifierId;
+    // 修改者
+    private String modifierName;
+    // 创建时间
+    private LocalDateTime gmtCreate;
+    // 修改时间
+    private LocalDateTime gmtModified;
+
+    //所有属性的getter和setter
+
+    public String getAfterSaleSn()
+    {
+<span class="fc" id="L60">        return afterSaleSn;</span>
+    }
+    public void setAfterSaleSn(String afterSaleSn)
+    {
+<span class="nc" id="L64">        this.afterSaleSn = afterSaleSn;</span>
+<span class="nc" id="L65">    }</span>
+
+    public Long getId()
+    {
+<span class="fc" id="L69">        return id;</span>
+    }
+
+    public void setId(Long id)
+    {
+<span class="fc" id="L74">        this.id = id;</span>
+<span class="fc" id="L75">    }</span>
+
+    public Byte getType()
+    {
+<span class="fc" id="L79">        return type;</span>
+    }
+
+    public void setType(Byte type)
+    {
+<span class="fc" id="L84">        this.type = type;</span>
+<span class="fc" id="L85">    }</span>
+
+    public Byte getStatus()
+    {
+<span class="fc" id="L89">        return status;</span>
+    }
+
+    public void setStatus(Byte status)
+    {
+<span class="fc" id="L94">        this.status = status;</span>
+<span class="fc" id="L95">    }</span>
+
+    public String getReason()
+    {
+<span class="fc" id="L99">        return reason;</span>
+    }
+
+    public void setReason(String reason)
+    {
+<span class="fc" id="L104">        this.reason = reason;</span>
+<span class="fc" id="L105">    }</span>
+
+    public Integer getQuantity()
+    {
+<span class="fc" id="L109">        return quantity;</span>
+    }
+
+    public void setQuantity(Integer quantity)
+    {
+<span class="fc" id="L114">        this.quantity = quantity;</span>
+<span class="fc" id="L115">    }</span>
+
+    public String getConclusion()
+    {
+<span class="fc" id="L119">        return conclusion;</span>
+    }
+
+    public void setConclusion(String conclusion)
+    {
+<span class="fc" id="L124">        this.conclusion = conclusion;</span>
+<span class="fc" id="L125">    }</span>
+
+    public String getName() {
+<span class="fc" id="L128">        return name;</span>
+    }
+    public void setName(String name) {
+<span class="fc" id="L131">        this.name = name;</span>
+<span class="fc" id="L132">    }</span>
+
+    public String getMobile()
+    {
+<span class="fc" id="L136">        return mobile;</span>
+    }
+
+    public void setMobile(String mobile)
+    {
+<span class="fc" id="L141">        this.mobile = mobile;</span>
+<span class="fc" id="L142">    }</span>
+
+    public Long getRegionId()
+    {
+<span class="fc" id="L146">        return regionId;</span>
+    }
+
+    public void setRegionId(Long regionId)
+    {
+<span class="fc" id="L151">        this.regionId = regionId;</span>
+<span class="fc" id="L152">    }</span>
+
+    public String getAddress()
+    {
+<span class="fc" id="L156">        return address;</span>
+    }
+
+    public void setAddress(String address)
+    {
+<span class="fc" id="L161">        this.address = address;</span>
+<span class="fc" id="L162">    }</span>
+
+    public Boolean getIsDisputing() {
+<span class="fc" id="L165">        return isDisputing;</span>
+    }
+    public void setIsDisputing(Boolean isDisputing) {
+<span class="fc" id="L168">        this.isDisputing = isDisputing;</span>
+<span class="fc" id="L169">    }</span>
+
+    public Long getCustomerId()
+    {
+<span class="fc" id="L173">        return customerId;</span>
+    }
+
+    public void setCustomerId(Long customerId)
+    {
+<span class="fc" id="L178">        this.customerId = customerId;</span>
+<span class="fc" id="L179">    }</span>
+
+    public Long getShopId()
+    {
+<span class="fc" id="L183">        return shopId;</span>
+    }
+
+    public void setShopId(Long shopId)
+    {
+<span class="fc" id="L188">        this.shopId = shopId;</span>
+<span class="fc" id="L189">    }</span>
+
+    public Long getProductId()
+    {
+<span class="fc" id="L193">        return productId;</span>
+    }
+
+    public void setProductId(Long productId)
+    {
+<span class="fc" id="L198">        this.productId = productId;</span>
+<span class="fc" id="L199">    }</span>
+
+    public Long getOrderItemId()
+    {
+<span class="fc" id="L203">        return orderItemId;</span>
+    }
+
+    public void setOrderItemId(Long orderItemId)
+    {
+<span class="fc" id="L208">        this.orderItemId = orderItemId;</span>
+<span class="fc" id="L209">    }</span>
+
+    public Long getSendOffExpressId()
+    {
+<span class="fc" id="L213">        return sendOffExpressId;</span>
+    }
+
+    public void setSendOffExpressId(Long sendOffExpressId)
+    {
+<span class="fc" id="L218">        this.sendOffExpressId = sendOffExpressId;</span>
+<span class="fc" id="L219">    }</span>
+
+    public Long getSendBackExpressId()
+    {
+<span class="fc" id="L223">        return sendBackExpressId;</span>
+    }
+
+    public void setSendBackExpressId(Long sendBackExpressId)
+    {
+<span class="fc" id="L228">        this.sendBackExpressId = sendBackExpressId;</span>
+<span class="fc" id="L229">    }</span>
+
+    public Long getRefundId()
+    {
+<span class="fc" id="L233">        return refundId;</span>
+    }
+
+    public void setRefundId(Long refundId)
+    {
+<span class="fc" id="L238">        this.refundId = refundId;</span>
+<span class="fc" id="L239">    }</span>
+
+    public Long getServiceOrderId()
+    {
+<span class="fc" id="L243">        return serviceOrderId;</span>
+    }
+
+    public void setServiceOrderId(Long serviceOrderId)
+    {
+<span class="fc" id="L248">        serviceOrderId = serviceOrderId;</span>
+<span class="fc" id="L249">    }</span>
+
+    public Long getCreatorId()
+    {
+<span class="fc" id="L253">        return creatorId;</span>
+    }
+
+    public void setCreatorId(Long creatorId)
+    {
+<span class="nc" id="L258">        this.creatorId = creatorId;</span>
+<span class="nc" id="L259">    }</span>
+
+    public String getCreatorName()
+    {
+<span class="fc" id="L263">        return creatorName;</span>
+    }
+
+    public void setCreatorName(String creatorName)
+    {
+<span class="nc" id="L268">        this.creatorName = creatorName;</span>
+<span class="nc" id="L269">    }</span>
+
+    public Long getModifierId()
+    {
+<span class="fc" id="L273">        return modifierId;</span>
+    }
+
+    public void setModifierId(Long modifierId)
+    {
+<span class="nc" id="L278">        this.modifierId = modifierId;</span>
+<span class="nc" id="L279">    }</span>
+
+    public String getModifierName()
+    {
+<span class="fc" id="L283">        return modifierName;</span>
+    }
+
+    public void setModifierName(String modifierName)
+    {
+<span class="nc" id="L288">        this.modifierName = modifierName;</span>
+<span class="nc" id="L289">    }</span>
+
+    public LocalDateTime getGmtCreate()
+    {
+<span class="fc" id="L293">        return gmtCreate;</span>
+    }
+
+    public void setGmtCreate(LocalDateTime gmtCreate)
+    {
+<span class="fc" id="L298">        this.gmtCreate = gmtCreate;</span>
+<span class="fc" id="L299">    }</span>
+
+    public LocalDateTime getGmtModified()
+    {
+<span class="fc" id="L303">        return gmtModified;</span>
+    }
+
+    public void setGmtModified(LocalDateTime gmtModified)
+    {
+<span class="fc" id="L308">        this.gmtModified = gmtModified;</span>
+<span class="fc" id="L309">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

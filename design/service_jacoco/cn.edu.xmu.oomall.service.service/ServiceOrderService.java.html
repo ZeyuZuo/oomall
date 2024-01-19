@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServiceOrderService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">service</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.service.service</a> &gt; <span class="el_source">ServiceOrderService.java</span></div><h1>ServiceOrderService.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.service.service;
+
+import cn.edu.xmu.javaee.core.aop.Audit;
+import cn.edu.xmu.javaee.core.exception.BusinessException;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.oomall.service.dao.openfeign.AfterSaleDao;
+import cn.edu.xmu.oomall.service.mapper.openfeign.po.AfterSale;
+import cn.edu.xmu.oomall.service.controller.Dto.MaintainerMessageDto;
+import cn.edu.xmu.oomall.service.controller.Dto.ServiceOrderCreateDto;
+import cn.edu.xmu.oomall.service.controller.Dto.SimpleServiceOrderDto;
+import cn.edu.xmu.oomall.service.dao.ServiceOrderDao;
+import cn.edu.xmu.oomall.service.dao.bo.ServiceOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
+
+@Service
+@Transactional(propagation = Propagation.REQUIRED)
+public class ServiceOrderService {
+    private AfterSaleDao afterSaleDao;
+    private ServiceOrderDao serviceOrderDao;
+
+<span class="fc" id="L29">    private final static Logger logger = LoggerFactory.getLogger(ServiceOrderService.class);</span>
+
+    @Autowired
+<span class="fc" id="L32">    public ServiceOrderService(AfterSaleDao afterSaleDao, ServiceOrderDao serviceOrderDao) {</span>
+<span class="fc" id="L33">        this.afterSaleDao = afterSaleDao;</span>
+<span class="fc" id="L34">        this.serviceOrderDao = serviceOrderDao;</span>
+<span class="fc" id="L35">    }</span>
+    /**
+     * 商户创建服务单
+     * @param shopId
+     * @param id
+     * @param serviceOrderCreateDto
+     * @param userDto
+     * @return
+     */
+    public ServiceOrder createServiceOrder(Long shopId, Long id, ServiceOrderCreateDto serviceOrderCreateDto, UserDto userDto) {
+<span class="fc" id="L45">        AfterSale afterSale = this.afterSaleDao.findById(shopId,id);</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if(afterSale == null){</span>
+<span class="nc" id="L47">            throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, &quot;售后单不存在&quot;);</span>
+        }
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if(!Objects.equals(afterSale.getShop().getId(), shopId)){</span>
+<span class="fc" id="L50">            throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, &quot;售后单不属于该店铺&quot;);</span>
+        }
+<span class="fc" id="L52">        ServiceOrder serviceOrder = this.serviceOrderDao.findByAftersalesOrderId(id);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if(serviceOrder != null){</span>
+<span class="fc" id="L54">            throw new BusinessException(ReturnNo.AFTERSALE_EXIST_SERVICEORDER, &quot;售后单已有服务单&quot;);</span>
+        }
+<span class="fc" id="L56">        ServiceOrder newServiceOrder = this.serviceOrderDao.NEWServiceOrder(serviceOrderCreateDto.getType());</span>
+<span class="fc" id="L57">        newServiceOrder.setServiceOrderDao(this.serviceOrderDao);</span>
+<span class="fc" id="L58">        newServiceOrder = newServiceOrder.createServiceOrder(afterSale, serviceOrderCreateDto,userDto);</span>
+<span class="fc" id="L59">        return newServiceOrder;</span>
+    }
+
+    /**
+     * 服务商接收服务单
+     * @param maintainerId
+     * @param id
+     * @param m_message
+     * @param userDto
+     * @return
+     */
+    public void acceptServiceOrder(Long maintainerId, Long id,MaintainerMessageDto m_message, UserDto userDto) {
+<span class="fc" id="L71">        ServiceOrder serviceOrder = this.serviceOrderDao.findById(id);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if(serviceOrder == null){</span>
+<span class="fc" id="L73">            throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, &quot;服务单不存在&quot;);</span>
+        }
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if(!serviceOrder.getStatus().equals(ServiceOrder.WAITING)){//服务单已经被接收</span>
+<span class="fc" id="L76">            throw new BusinessException(ReturnNo.STATENOTALLOW, &quot;服务单不是待接收状态&quot;);</span>
+        }
+<span class="fc" id="L78">        serviceOrder.acceptedByMaintainerId(maintainerId, m_message, userDto);</span>
+<span class="fc" id="L79">    }</span>
+
+    /**
+     * 服务商撤销服务单
+     * @param maintainerId
+     * @param serviceOrderId
+     * @param userDto
+     * @return
+     */
+    public void cancelServiceOrder(Long maintainerId,Long serviceOrderId, UserDto userDto) {
+<span class="fc" id="L89">        ServiceOrder serviceOrder = this.serviceOrderDao.findById(serviceOrderId);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if(serviceOrder == null){</span>
+<span class="fc" id="L91">            throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, &quot;服务单不存在&quot;);</span>
+        }
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if(!serviceOrder.getMaintainerId().equals(maintainerId)){//不是该服务商的服务单</span>
+<span class="fc" id="L94">            throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, &quot;不是该服务商的服务单&quot;);</span>
+        }
+<span class="fc" id="L96">        serviceOrder.cancelByMaintainer(maintainerId, userDto);</span>
+<span class="fc" id="L97">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

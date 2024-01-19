@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MaintainerService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">service</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.service.service</a> &gt; <span class="el_source">MaintainerService.java</span></div><h1>MaintainerService.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.service.service;
+
+import cn.edu.xmu.javaee.core.exception.BusinessException;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.oomall.service.dao.MaintainerDao;
+import cn.edu.xmu.oomall.service.dao.ProductServiceDao;
+import cn.edu.xmu.oomall.service.dao.bo.Maintainer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
+
+
+@Service
+@Transactional(propagation = Propagation.REQUIRED)
+public class MaintainerService {
+    private MaintainerDao maintainerDao;
+    @Autowired
+<span class="fc" id="L22">    public MaintainerService(MaintainerDao maintainerDao) {</span>
+<span class="fc" id="L23">        this.maintainerDao = maintainerDao;</span>
+<span class="fc" id="L24">    }</span>
+    /**
+     * 暂停服务商
+     * @param id
+     * @param user
+     */
+    public void suspendMaintainer(Long id, UserDto user) {
+<span class="fc" id="L31">        Maintainer maintainer = this.maintainerDao.findById(id);</span>
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        if(maintainer==null){</span>
+<span class="fc" id="L33">            throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), &quot;服务商&quot;, id));</span>
+        }
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if(!Objects.equals(maintainer.getStatus(), Maintainer.VALID)){</span>
+<span class="fc" id="L36">            throw new BusinessException(ReturnNo.STATENOTALLOW);</span>
+        }
+<span class="fc" id="L38">        maintainer.suspend(id,user);</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * 撤销服务商
+     * @param id
+     * @param user
+     */
+    public void cancelMaintainer(Long id, UserDto user) {
+<span class="fc" id="L47">        Maintainer maintainer = this.maintainerDao.findById(id);</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if(maintainer==null){</span>
+<span class="fc" id="L49">            throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), &quot;服务商&quot;, id));</span>
+        }
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if(!Objects.equals(maintainer.getStatus(), Maintainer.SUSPENDED)){</span>
+<span class="fc" id="L52">            throw new BusinessException(ReturnNo.STATENOTALLOW);</span>
+        }
+<span class="fc" id="L54">        maintainer.cancel(id,user);</span>
+<span class="fc" id="L55">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

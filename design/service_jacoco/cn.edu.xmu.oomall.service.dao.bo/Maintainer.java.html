@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Maintainer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">service</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.service.dao.bo</a> &gt; <span class="el_source">Maintainer.java</span></div><h1>Maintainer.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.service.dao.bo;
+
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.javaee.core.exception.BusinessException;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.oomall.service.dao.MaintainerDao;
+import cn.edu.xmu.oomall.service.dao.ProductServiceDao;
+import cn.edu.xmu.oomall.service.dao.ServiceOrderDao;
+import cn.edu.xmu.oomall.service.mapper.po.MaintainerPo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.*;
+
+<span class="fc" id="L29">@NoArgsConstructor</span>
+<span class="nc" id="L30">@AllArgsConstructor</span>
+<span class="nc" id="L31">@ToString(callSuper = true, doNotUseGetters = true)</span>
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@CopyFrom({MaintainerPo.class})
+public class Maintainer extends OOMallObject implements Serializable
+{
+
+    private Long regionId;
+    private String name;
+    private String consignee;
+    private String phone;
+    private String address;
+    private Byte status;    //0-VALID 1-SUSPENDED 2-DELETED
+
+    //这里定义了一个用于记录日志的 Logger 对象。
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L47">    private final static Logger logger = LoggerFactory.getLogger(Maintainer.class);</span>
+
+<span class="fc" id="L49">    @Setter</span>
+    @JsonIgnore
+    @ToString.Exclude
+    private MaintainerDao maintainerDao;
+
+    /**
+     * 服务商 共三种状态
+     */
+    //正常
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L60">    public static final Byte VALID = 0;</span>
+    //暂停
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L64">    public static final Byte SUSPENDED = 1;</span>
+    //已删除
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L68">    public static final Byte DELETED = 2;</span>
+
+    //类型名称映射：
+    @ToString.Exclude
+    @JsonIgnore
+<span class="fc" id="L73">    public static final Map&lt;Byte, String&gt; TYPENAMES = new HashMap&lt;&gt;()</span>
+<span class="fc" id="L74">    {</span>
+        {
+<span class="fc" id="L76">            put(VALID, &quot;正常&quot;);</span>
+<span class="fc" id="L77">            put(SUSPENDED, &quot;暂停&quot;);</span>
+<span class="fc" id="L78">            put(DELETED, &quot;已删除&quot;);</span>
+<span class="fc" id="L79">        }</span>
+    };
+
+
+    //允许的状态迁移
+    @JsonIgnore
+    @ToString.Exclude
+<span class="fc" id="L86">    private static final Map&lt;Byte, Set&lt;Byte&gt;&gt; toStatus = new HashMap&lt;&gt;()</span>
+<span class="fc" id="L87">    {</span>
+        {
+<span class="fc" id="L89">            put(VALID, new HashSet&lt;&gt;()</span>
+<span class="fc" id="L90">            {</span>
+                {
+<span class="fc" id="L92">                    add(SUSPENDED);</span>
+<span class="fc" id="L93">                }</span>
+            });
+<span class="fc" id="L95">            put(SUSPENDED, new HashSet&lt;&gt;()</span>
+<span class="fc" id="L96">            {</span>
+                {
+<span class="fc" id="L98">                    add(VALID);</span>
+<span class="fc" id="L99">                    add(DELETED); // 管理员删除</span>
+<span class="fc" id="L100">                }</span>
+            });
+<span class="fc" id="L102">        }</span>
+    };
+
+    /**
+     * 是否允许状态迁移
+     *
+     * @param status
+     * @return
+     */
+    public boolean allowStatus(Byte status)
+    {
+<span class="nc" id="L113">        boolean ret = false;</span>
+<span class="nc bnc" id="L114" title="All 4 branches missed.">        if (null != status &amp;&amp; null != this.status)</span>
+        {
+<span class="nc" id="L116">            Set&lt;Byte&gt; allowStatusSet = toStatus.get(this.status);</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">            if (null != allowStatusSet)</span>
+            {
+<span class="nc" id="L119">                ret = allowStatusSet.contains(status);</span>
+            }
+        }
+<span class="nc" id="L122">        return ret;</span>
+    }
+
+    // 所有属性的set &amp;&amp; get
+    public Long getId()
+    {
+<span class="fc" id="L128">        return id;</span>
+    }
+
+    public void setId(Long id)
+    {
+<span class="fc" id="L133">        id = id;</span>
+<span class="fc" id="L134">    }</span>
+
+    public Long getRegionId()
+    {
+<span class="fc" id="L138">        return regionId;</span>
+    }
+
+    public void setRegionId(Long regionId)
+    {
+<span class="fc" id="L143">        this.regionId = regionId;</span>
+<span class="fc" id="L144">    }</span>
+
+    public String getName()
+    {
+<span class="fc" id="L148">        return name;</span>
+    }
+
+    public void setName(String name)
+    {
+<span class="fc" id="L153">        this.name = name;</span>
+<span class="fc" id="L154">    }</span>
+
+    public String getConsignee()
+    {
+<span class="fc" id="L158">        return consignee;</span>
+    }
+
+    public void setConsignee(String consignee)
+    {
+<span class="fc" id="L163">        this.consignee = consignee;</span>
+<span class="fc" id="L164">    }</span>
+
+    public String getPhone()
+    {
+<span class="fc" id="L168">        return phone;</span>
+    }
+
+    public void setPhone(String phone)
+    {
+<span class="fc" id="L173">        this.phone = phone;</span>
+<span class="fc" id="L174">    }</span>
+
+    public String getAddress()
+    {
+<span class="fc" id="L178">        return address;</span>
+    }
+
+    public void setAddress(String address)
+    {
+<span class="fc" id="L183">        this.address = address;</span>
+<span class="fc" id="L184">    }</span>
+
+    public Byte getStatus()
+    {
+<span class="fc" id="L188">        return status;</span>
+    }
+
+    public void setStatus(Byte status)
+    {
+<span class="fc" id="L193">        this.status = status;</span>
+<span class="fc" id="L194">    }</span>
+
+    public void setGmtCreate(LocalDateTime gmtCreate)
+    {
+<span class="fc" id="L198">        this.gmtCreate = gmtCreate;</span>
+<span class="fc" id="L199">    }</span>
+
+    public void setGmtModified(LocalDateTime gmtModified)
+    {
+<span class="fc" id="L203">        this.gmtModified = gmtModified;</span>
+<span class="fc" id="L204">    }</span>
+
+    /**
+     * 暂停服务商
+     * @param id
+     * @param user
+     * @return
+     */
+<span class="fc" id="L212">    @Setter</span>
+    @JsonIgnore
+    @ToString.Exclude
+    private ProductServiceDao productServiceDao;
+    public void suspend(Long id,UserDto user)
+    {
+<span class="fc" id="L218">        List&lt;ProductService&gt; PsList = productServiceDao.findByMaintainerId(id);</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">        for(ProductService ps:PsList)</span>
+        {
+<span class="fc" id="L221">            ps.suspend(user);</span>
+<span class="fc" id="L222">        }</span>
+<span class="fc" id="L223">        this.setStatus(SUSPENDED);</span>
+<span class="fc" id="L224">        maintainerDao.save(this,user);</span>
+<span class="fc" id="L225">    }</span>
+
+    /**
+     * 撤销服务商
+     * @return
+     */
+    private ServiceOrderDao serviceOrderDao;
+
+    public void setServiceOrderDao(ServiceOrderDao serviceOrderDao) {
+<span class="fc" id="L234">        this.serviceOrderDao = serviceOrderDao;</span>
+<span class="fc" id="L235">    }</span>
+
+    public void cancel (Long id, UserDto user)
+    {
+<span class="fc" id="L239">        List&lt;ServiceOrder&gt;SOList = serviceOrderDao.findOnGoingByMaintainerId(id);</span>
+        //存在进行中的服务单
+<span class="fc bfc" id="L241" title="All 2 branches covered.">        if(SOList.size()!=0) {</span>
+<span class="fc" id="L242">        throw new BusinessException(ReturnNo.ONGOING_SERVICEORDER_EXIST, &quot;存在进行中的服务单&quot;);</span>
+        }
+<span class="fc" id="L244">        List&lt;ProductService&gt; PsList = productServiceDao.findByMaintainerId(id);</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">        for(ProductService ps:PsList)</span>
+        {
+<span class="nc" id="L247">            ps.cancel(user);</span>
+<span class="nc" id="L248">        }</span>
+<span class="fc" id="L249">        this.setStatus(DELETED);</span>
+<span class="fc" id="L250">        maintainerDao.save(this,user);</span>
+<span class="fc" id="L251">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

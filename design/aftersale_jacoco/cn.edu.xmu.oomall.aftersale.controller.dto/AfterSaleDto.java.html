@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AfterSaleDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aftersale</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.aftersale.controller.dto</a> &gt; <span class="el_source">AfterSaleDto.java</span></div><h1>AfterSaleDto.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.aftersale.controller.dto;
+
+
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.model.bo.OOMallObject;
+import cn.edu.xmu.javaee.core.model.dto.IdNameTypeDto;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.javaee.core.util.CloneFactory;
+import cn.edu.xmu.oomall.aftersale.dao.bo.AfterSale;
+import cn.edu.xmu.oomall.aftersale.mapper.openfeign.po.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+<span class="nc" id="L19">@NoArgsConstructor</span>
+@CopyFrom({AfterSale.class})
+public class AfterSaleDto extends OOMallObject {
+    private Long id;
+    private String afterSaleSn;
+    private Byte type;
+    private String reason;
+    private String conclusion;
+    private Integer quantity;
+    private Byte status;
+    private Boolean isDisputing;
+    private OrderItem orderItem;
+    private Express sendOffExpress;
+    private Express sendBackExpress;
+    private IdNameTypeDto customer;
+    private IdNameTypeDto shop;
+    private IdNameTypeDto product;
+    private Consignee consignee;
+
+
+    public AfterSaleDto(AfterSale afterSale) {
+<span class="fc" id="L40">        super();</span>
+<span class="fc" id="L41">        CloneFactory.copy(this, afterSale);</span>
+<span class="fc" id="L42">        this.setOrderItem(afterSale.getOrderItem());</span>
+<span class="fc" id="L43">        this.setCustomer(afterSale.getCustomer());</span>
+<span class="fc" id="L44">        this.setShop(afterSale.getShop());</span>
+<span class="fc" id="L45">        this.setProduct(afterSale.getProduct());</span>
+<span class="fc" id="L46">        this.setSendOffExpress(afterSale.getSendOffExpress());</span>
+<span class="fc" id="L47">        this.setSendBackExpress(afterSale.getSendBackExpress());</span>
+<span class="fc" id="L48">        this.setConsignee(new Consignee(afterSale.getName(), afterSale.getMobile(), afterSale.getRegionId(), afterSale.getAddress()));</span>
+<span class="fc" id="L49">    }</span>
+
+
+    public Long getId() {
+<span class="fc" id="L53">        return id;</span>
+    }
+    public String getAfterSaleSn() {
+<span class="fc" id="L56">        return afterSaleSn;</span>
+    }
+    public Byte getType() {
+<span class="fc" id="L59">        return type;</span>
+    }
+    public String getReason() {
+<span class="fc" id="L62">        return reason;</span>
+    }
+    public String getConclusion() {
+<span class="fc" id="L65">        return conclusion;</span>
+    }
+    public Integer getQuantity() {
+<span class="fc" id="L68">        return quantity;</span>
+    }
+    public Byte getStatus() {
+<span class="fc" id="L71">        return status;</span>
+    }
+    public Boolean getIsDisputing() {
+<span class="fc" id="L74">        return isDisputing;</span>
+    }
+    public OrderItem getOrderItem() {
+<span class="fc" id="L77">        return orderItem;</span>
+    }
+    public IdNameTypeDto getCustomer() {
+<span class="fc" id="L80">        return customer;</span>
+    }
+    public IdNameTypeDto getShop() {
+<span class="fc" id="L83">        return shop;</span>
+    }
+    public IdNameTypeDto getProduct() {
+<span class="fc" id="L86">        return product;</span>
+    }
+    public Consignee getConsignee() {
+<span class="fc" id="L89">        return consignee;</span>
+    }
+    public Express getSendOffExpress() {
+<span class="fc" id="L92">        return sendOffExpress;</span>
+    }
+    public Express getSendBackExpress() {
+<span class="fc" id="L95">        return sendBackExpress;</span>
+    }
+    public void setId(Long id) {
+<span class="fc" id="L98">        this.id = id;</span>
+<span class="fc" id="L99">    }</span>
+    public void setAfterSaleSn(String afterSaleSn) {
+<span class="nc" id="L101">        this.afterSaleSn = afterSaleSn;</span>
+<span class="nc" id="L102">    }</span>
+    public void setType(Byte type) {
+<span class="fc" id="L104">        this.type = type;</span>
+<span class="fc" id="L105">    }</span>
+    public void setReason(String reason) {
+<span class="fc" id="L107">        this.reason = reason;</span>
+<span class="fc" id="L108">    }</span>
+    public void setConclusion(String conclusion) {
+<span class="fc" id="L110">        this.conclusion = conclusion;</span>
+<span class="fc" id="L111">    }</span>
+    public void setQuantity(Integer quantity) {
+<span class="fc" id="L113">        this.quantity = quantity;</span>
+<span class="fc" id="L114">    }</span>
+    public void setStatus(Byte status) {
+<span class="fc" id="L116">        this.status = status;</span>
+<span class="fc" id="L117">    }</span>
+    public void setIsDisputing(Boolean isDisputing) {
+<span class="fc" id="L119">        this.isDisputing = isDisputing;</span>
+<span class="fc" id="L120">    }</span>
+    public void setOrderItem(OrderItem orderItem) {
+<span class="fc" id="L122">        this.orderItem = orderItem;</span>
+<span class="fc" id="L123">    }</span>
+    public void setCustomer(Customer customer) {
+<span class="fc" id="L125">        this.customer = IdNameTypeDto.builder().id(customer.getId()).name(customer.getName()).build();</span>
+<span class="fc" id="L126">    }</span>
+    public void setShop(Shop shop){
+<span class="fc" id="L128">        this.shop = IdNameTypeDto.builder().id(shop.getId()).name(shop.getName()).build();</span>
+<span class="fc" id="L129">    }</span>
+    public void setProduct(Product product){
+<span class="fc" id="L131">        this.product = IdNameTypeDto.builder().id(product.getId()).name(product.getName()).build();</span>
+<span class="fc" id="L132">    }</span>
+
+    public void setSendOffExpress(Express sendOffExpress){
+<span class="fc" id="L135">        this.sendOffExpress = sendOffExpress;</span>
+<span class="fc" id="L136">    }</span>
+    public void setSendBackExpress(Express sendBackExpress){
+<span class="fc" id="L138">        this.sendBackExpress = sendBackExpress;</span>
+<span class="fc" id="L139">    }</span>
+    public void setConsignee(Consignee consignee){
+<span class="fc" id="L141">        this.consignee = consignee;</span>
+<span class="fc" id="L142">    }</span>
+    @Override
+    public void setGmtCreate(LocalDateTime gmtCreate) {
+<span class="fc" id="L145">        this.gmtCreate = gmtCreate;</span>
+<span class="fc" id="L146">    }</span>
+    @Override
+    public void setGmtModified(LocalDateTime gmtModified) {
+<span class="fc" id="L149">        this.gmtModified = gmtModified;</span>
+<span class="fc" id="L150">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

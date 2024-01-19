@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AfterSaleService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aftersale</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.aftersale.service</a> &gt; <span class="el_source">AfterSaleService.java</span></div><h1>AfterSaleService.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.aftersale.service;
+
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.oomall.aftersale.controller.ShopAfterSaleController;
+import cn.edu.xmu.oomall.aftersale.controller.dto.ConfirmDto;
+import cn.edu.xmu.oomall.aftersale.controller.vo.ConfirmVo;
+import cn.edu.xmu.oomall.aftersale.dao.AfterSaleDao;
+import cn.edu.xmu.oomall.aftersale.dao.bo.AfterSale;
+import cn.edu.xmu.javaee.core.exception.BusinessException;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
+
+
+@Service
+@Transactional(propagation = Propagation.REQUIRED)
+public class AfterSaleService {
+    private AfterSaleDao afterSaleDao;
+    @Autowired
+<span class="fc" id="L26">    public AfterSaleService(AfterSaleDao afterSaleDao){</span>
+<span class="fc" id="L27">        this.afterSaleDao = afterSaleDao;</span>
+<span class="fc" id="L28">    }</span>
+    public void confirmAfterSale(Long shopId, Long id, ConfirmDto confirm, UserDto userDto){
+<span class="fc" id="L30">        AfterSale aftersale = afterSaleDao.findById(id);</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if(aftersale == null){</span>
+<span class="fc" id="L32">            throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, &quot;售后单不存在&quot;);</span>
+        }
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        if(aftersale.getShopId() != shopId){</span>
+<span class="nc" id="L35">            throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, &quot;售后单不属于该店铺&quot;);</span>
+        }
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if(!(aftersale.getStatus().equals(AfterSale.WAITING))){</span>
+<span class="fc" id="L38">            throw new BusinessException(ReturnNo.STATENOTALLOW, &quot;售后单状态禁止&quot;);</span>
+        }
+<span class="fc" id="L40">        aftersale.confirm(confirm, userDto);</span>
+<span class="fc" id="L41">    }</span>
+
+    public AfterSale shopFindById(Long shopId, Long id){
+<span class="fc" id="L44">        AfterSale aftersale = afterSaleDao.findById(id);</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if(aftersale == null){</span>
+<span class="nc" id="L46">            throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, &quot;售后单不存在&quot;);</span>
+        }
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if(aftersale.getShopId() != shopId){</span>
+<span class="fc" id="L49">            throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, &quot;售后单不属于该店铺&quot;);</span>
+        }
+<span class="fc" id="L51">        return aftersale;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

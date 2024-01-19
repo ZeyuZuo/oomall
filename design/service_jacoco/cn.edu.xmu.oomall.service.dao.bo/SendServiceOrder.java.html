@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SendServiceOrder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">service</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.service.dao.bo</a> &gt; <span class="el_source">SendServiceOrder.java</span></div><h1>SendServiceOrder.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.service.dao.bo;
+
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.exception.BusinessException;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.oomall.service.dao.MaintainerDao;
+import cn.edu.xmu.oomall.service.mapper.openfeign.po.Express;
+import cn.edu.xmu.oomall.service.dao.openfeign.ExpressDao;
+import cn.edu.xmu.oomall.service.mapper.openfeign.ExpressMapper;
+import cn.edu.xmu.oomall.service.controller.Dto.MaintainerMessageDto;
+import cn.edu.xmu.oomall.service.mapper.openfeign.po.Consignee;
+import cn.edu.xmu.oomall.service.mapper.po.ServiceOrderPo;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+<span class="fc" id="L21">@NoArgsConstructor</span>
+<span class="nc" id="L22">@ToString(callSuper = true, doNotUseGetters = true)</span>
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@CopyFrom({ServiceOrderPo.class})
+public class SendServiceOrder extends ServiceOrder {
+    @Override
+    public void acceptedByMaintainerId(Long mid, MaintainerMessageDto m_message, UserDto user) throws BusinessException {
+<span class="fc" id="L28">        Boolean passed = this.isAcceptable(mid);</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">        if(!passed){</span>
+<span class="nc" id="L30">            throw new BusinessException(ReturnNo.RESOURCE_ID_OUTSCOPE, &quot;服务单不可被接收&quot;);</span>
+        }
+
+<span class="fc" id="L33">        Consignee sender=new Consignee();</span>
+<span class="fc" id="L34">        sender.setName(this.getCustomerName());</span>
+<span class="fc" id="L35">        sender.setAddress(this.getCustomerAddress());</span>
+<span class="fc" id="L36">        sender.setMobile(this.getCustomerPhone());</span>
+<span class="fc" id="L37">        sender.setRegionId(this.getRegionId());</span>
+
+
+<span class="fc" id="L40">       Consignee receiver=new Consignee();</span>
+<span class="fc" id="L41">       receiver.setName(m_message.getMaintainerName());</span>
+<span class="fc" id="L42">       receiver.setAddress(m_message.getAddress());</span>
+<span class="fc" id="L43">       receiver.setMobile(m_message.getMaintainerMobile());</span>
+<span class="fc" id="L44">       receiver.setRegionId(m_message.getRegionId());</span>
+
+<span class="fc" id="L46">        Express express = this.expressDao.createExpress(sender, receiver, this.getShopId());</span>
+
+<span class="fc" id="L48">        this.setSendExpressId(express.getId());</span>
+<span class="fc" id="L49">        this.setMaintainerId(mid);</span>
+<span class="fc" id="L50">        this.setStatus(GOING);</span>
+<span class="fc" id="L51">        this.serviceOrderDao.save(this,user);//serviceOrder保存</span>
+<span class="fc" id="L52">    }</span>
+
+    public void cancelByMaintainer(Long maintainerId, UserDto user){
+
+<span class="nc" id="L56">        Express express = this.expressDao.findById(this.getSendExpressId());</span>
+
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if(express.getStatus()==2)</span>
+        {
+<span class="nc" id="L60">            Express Returnexpress = this.expressDao.createExpress(express.getReceiver(), express.getSender(), this.getShopId());</span>
+<span class="nc" id="L61">            this.setReceiveExpressId(Returnexpress.getId());</span>
+        }
+
+<span class="nc" id="L64">        this.setStatus(WAITING);</span>
+<span class="nc" id="L65">        this.setMaintainerId(null);</span>
+<span class="nc" id="L66">        this.serviceOrderDao.save(this,user);</span>
+
+<span class="nc" id="L68">    }</span>
+    public Long getId() {
+<span class="fc" id="L70">        return id;</span>
+    }
+    public void setId(Long id) {
+<span class="fc" id="L73">        this.id = id;</span>
+<span class="fc" id="L74">    }</span>
+    public Byte getType() {
+<span class="fc" id="L76">        return type;</span>
+    }
+    public void setType(Byte type) {
+<span class="fc" id="L79">        this.type = type;</span>
+<span class="fc" id="L80">    }</span>
+    public Byte getStatus() {
+<span class="fc" id="L82">        return status;</span>
+    }
+    public void setStatus(Byte status) {
+<span class="fc" id="L85">        this.status = status;</span>
+<span class="fc" id="L86">    }</span>
+    public Byte getResult() {
+<span class="fc" id="L88">        return result;</span>
+    }
+    public void setResult(Byte result) {
+<span class="fc" id="L91">        this.result = result;</span>
+<span class="fc" id="L92">    }</span>
+    public String getDescription() {
+<span class="fc" id="L94">        return description;</span>
+    }
+    public void setDescription(String description) {
+<span class="fc" id="L97">        this.description = description;</span>
+<span class="fc" id="L98">    }</span>
+    public String getServiceOrderSn() {
+<span class="fc" id="L100">        return serviceOrderSn;</span>
+    }
+    public void setServiceOrderSn(String serviceOrderSn) {
+<span class="fc" id="L103">        this.serviceOrderSn = serviceOrderSn;</span>
+<span class="fc" id="L104">    }</span>
+    //product
+    public Long getProductId() {
+<span class="fc" id="L107">        return productId;</span>
+    }
+    public void setProductId(Long productId) {
+<span class="fc" id="L110">        this.productId = productId;</span>
+<span class="fc" id="L111">    }</span>
+    public Long getProductServiceId() {
+<span class="fc" id="L113">        return productServiceId;</span>
+    }
+    public void setProductServiceId(Long productServiceId) {
+<span class="fc" id="L116">        this.productServiceId = productServiceId;</span>
+<span class="fc" id="L117">    }</span>
+    //customer
+    public Long getCustomerId() {
+<span class="fc" id="L120">        return customerId;</span>
+    }
+    public void setCustomerId(Long customerId) {
+<span class="fc" id="L123">        this.customerId = customerId;</span>
+<span class="fc" id="L124">    }</span>
+    public String getCustomerPhone() {
+<span class="fc" id="L126">        return customerPhone;</span>
+    }
+    public void setCustomerPhone(String customerPhone) {
+<span class="fc" id="L129">        this.customerPhone = customerPhone;</span>
+<span class="fc" id="L130">    }</span>
+    public String getCustomerName() {
+<span class="fc" id="L132">        return customerName;</span>
+    }
+    public void setCustomerName(String customerName) {
+<span class="fc" id="L135">        this.customerName = customerName;</span>
+<span class="fc" id="L136">    }</span>
+
+    public String getCustomerAddress() {
+<span class="fc" id="L139">        return customerAddress;</span>
+    }
+
+    public void setCustomerAddress(String customerAddress) {
+<span class="fc" id="L143">        this.customerAddress = customerAddress;</span>
+<span class="fc" id="L144">    }</span>
+
+    public String getMaintainerAddress() {
+<span class="fc" id="L147">        return maintainerAddress;</span>
+    }
+
+    public void setMaintainerAddress(String maintainerAddress) {
+<span class="fc" id="L151">        this.maintainerAddress = maintainerAddress;</span>
+<span class="fc" id="L152">    }</span>
+
+    //maintainer
+    public Long getMaintainerId() {
+<span class="fc" id="L156">        return maintainerId;</span>
+    }
+    public void setMaintainerId(Long maintainerId) {
+<span class="fc" id="L159">        this.maintainerId = maintainerId;</span>
+<span class="fc" id="L160">    }</span>
+    public String getMaintainerPhone() {
+<span class="fc" id="L162">        return maintainerPhone;</span>
+    }
+    public void setMaintainerPhone(String maintainerPhone) {
+<span class="fc" id="L165">        this.maintainerPhone = maintainerPhone;</span>
+<span class="fc" id="L166">    }</span>
+    public String getMaintainerName() {
+<span class="fc" id="L168">        return maintainerName;</span>
+    }
+    public void setMaintainerName(String maintainerName) {
+<span class="fc" id="L171">        this.maintainerName = maintainerName;</span>
+<span class="fc" id="L172">    }</span>
+
+    //shop
+    public Long getShopId() {
+<span class="fc" id="L176">        return shopId;</span>
+    }
+    public void setShopId(Long shopId) {
+<span class="fc" id="L179">        this.shopId = shopId;</span>
+<span class="fc" id="L180">    }</span>
+    //region
+    public Long getRegionId() {
+<span class="fc" id="L183">        return regionId;</span>
+    }
+    public void setRegionId(Long regionId) {
+<span class="fc" id="L186">        this.regionId = regionId;</span>
+<span class="fc" id="L187">    }</span>
+    //Express
+    public Long getSendExpressId() {
+<span class="fc" id="L190">        return sendExpressId;</span>
+    }
+    public void setSendExpressId(Long sendExpressId) {
+<span class="fc" id="L193">        this.sendExpressId = sendExpressId;</span>
+<span class="fc" id="L194">    }</span>
+    public String getSendExpressBillCode() {
+<span class="fc" id="L196">        return sendExpressBillCode;</span>
+    }
+    public void setSendExpressBillCode(String sendExpressBillCode) {
+<span class="fc" id="L199">        this.sendExpressBillCode = sendExpressBillCode;</span>
+<span class="fc" id="L200">    }</span>
+    public Long getReceiveExpressId() {
+<span class="nc" id="L202">        return receiveExpressId;</span>
+    }
+    public void setReceiveExpressId(Long receiveExpressId) {
+<span class="nc" id="L205">        this.receiveExpressId = receiveExpressId;</span>
+<span class="nc" id="L206">    }</span>
+    public String getReceiveExpressBillCode() {
+<span class="nc" id="L208">        return receiveExpressBillCode;</span>
+    }
+    public void setReceiveExpressBillCode(String receiveExpressBillCode) {
+<span class="nc" id="L211">        this.receiveExpressBillCode = receiveExpressBillCode;</span>
+<span class="nc" id="L212">    }</span>
+    public Byte getServiceType() {
+<span class="fc" id="L214">        return serviceType;</span>
+    }
+    public void setServiceType(Byte serviceType) {
+<span class="fc" id="L217">        this.serviceType = serviceType;</span>
+<span class="fc" id="L218">    }</span>
+
+    public void setGmtCreate(LocalDateTime gmtCreate)
+    {
+<span class="fc" id="L222">        this.gmtCreate = gmtCreate;</span>
+<span class="fc" id="L223">    }</span>
+    public LocalDateTime getGmtCreate() {
+<span class="fc" id="L225">        return gmtCreate;</span>
+    }
+
+    public void setGmtModified(LocalDateTime gmtModified)
+    {
+<span class="fc" id="L230">        this.gmtModified = gmtModified;</span>
+<span class="fc" id="L231">    }</span>
+    public LocalDateTime getGmtModified() {
+<span class="fc" id="L233">        return gmtModified;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

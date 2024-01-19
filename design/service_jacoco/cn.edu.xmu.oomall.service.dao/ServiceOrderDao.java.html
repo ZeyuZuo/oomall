@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServiceOrderDao.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">service</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.service.dao</a> &gt; <span class="el_source">ServiceOrderDao.java</span></div><h1>ServiceOrderDao.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.service.dao;
+
+
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.javaee.core.exception.BusinessException;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+
+import cn.edu.xmu.javaee.core.util.CloneFactory;
+import cn.edu.xmu.oomall.service.dao.bo.OnSpotServiceOrder;
+import cn.edu.xmu.oomall.service.dao.bo.ProductService;
+import cn.edu.xmu.oomall.service.dao.bo.SendServiceOrder;
+import cn.edu.xmu.oomall.service.dao.bo.ServiceOrder;
+import cn.edu.xmu.oomall.service.dao.openfeign.AfterSaleDao;
+import cn.edu.xmu.oomall.service.dao.openfeign.ExpressDao;
+import cn.edu.xmu.oomall.service.dao.openfeign.RegionDao;
+import cn.edu.xmu.oomall.service.mapper.jpa.ServiceOrderPoMapper;
+import cn.edu.xmu.oomall.service.mapper.po.ProductServicePo;
+import cn.edu.xmu.oomall.service.mapper.po.ServiceOrderPo;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import io.lettuce.core.internal.Exceptions;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static cn.edu.xmu.javaee.core.model.Constants.PLATFORM;
+import static cn.edu.xmu.javaee.core.model.Constants.IDNOTEXIST;
+
+@Repository
+public class ServiceOrderDao {
+    private final static String KEY = &quot;R%d&quot;;
+<span class="fc" id="L39">    private final static Logger logger = LoggerFactory.getLogger(ServiceOrderDao.class);</span>
+    private ServiceOrderPoMapper serviceorderPoMapper;
+    private ProductServiceDao productServiceDao;
+    private RegionDao regionDao;
+    private AfterSaleDao afterSaleDao;
+    private MaintainerDao maintainerDao;
+    public MaintainerDao getMaintainerDao() {
+<span class="nc" id="L46">        return maintainerDao;</span>
+    }
+    private ExpressDao expressDao;
+
+    private void prebuild(ServiceOrder bo) {
+<span class="fc" id="L51">        bo.setServiceOrderDao(this);</span>
+<span class="fc" id="L52">        bo.setRegionDao(regionDao);</span>
+<span class="fc" id="L53">        bo.setAfterSaleDao(afterSaleDao);</span>
+<span class="fc" id="L54">        bo.setProductServiceDao(productServiceDao);</span>
+<span class="fc" id="L55">        bo.setExpressDao(expressDao);</span>
+<span class="fc" id="L56">    }</span>
+<span class="fc" id="L57">    private abstract class ServiceOrderFactory {</span>
+        public abstract ServiceOrder create(ServiceOrderPo po);
+        public abstract ServiceOrder newServiceOrder();
+    }
+
+<span class="fc" id="L62">    private class SendFactory extends ServiceOrderFactory {</span>
+        @Override
+        public ServiceOrder create(ServiceOrderPo po) {
+<span class="fc" id="L65">            SendServiceOrder bo = CloneFactory.copy(new SendServiceOrder(), po);</span>
+<span class="fc" id="L66">            prebuild(bo);</span>
+<span class="fc" id="L67">            return bo;</span>
+        }
+        public ServiceOrder newServiceOrder() {
+<span class="fc" id="L70">            return new SendServiceOrder();</span>
+        }
+    }
+<span class="fc" id="L73">    private class OnSpotFactory extends ServiceOrderFactory {</span>
+        @Override
+        public ServiceOrder create(ServiceOrderPo po) {
+<span class="fc" id="L76">            OnSpotServiceOrder bo = CloneFactory.copy(new OnSpotServiceOrder(), po);</span>
+<span class="fc" id="L77">            prebuild(bo);</span>
+<span class="fc" id="L78">            return bo;</span>
+        }
+        public ServiceOrder newServiceOrder() {
+<span class="fc" id="L81">            return new OnSpotServiceOrder();</span>
+        }
+    }
+    //根据类型获取不同的服务单 ------
+    public ServiceOrder NEWServiceOrder(byte type) {
+<span class="fc" id="L86">        ServiceOrderFactory factory = registry.get(type);</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">        if (factory == null) {</span>
+<span class="nc" id="L88">            throw new IllegalArgumentException(&quot;No service found for type: &quot; + type);</span>
+        }
+<span class="fc" id="L90">        return factory.newServiceOrder();</span>
+    }
+
+    // 服务注册表
+<span class="fc" id="L94">    private static final Map&lt;Byte, ServiceOrderFactory&gt; registry = new HashMap&lt;&gt;();</span>
+
+    @Autowired
+    public ServiceOrderDao(ServiceOrderPoMapper serviceorderPoMapper,
+                           ProductServiceDao productServiceDao,
+                           RegionDao regionDao,
+                           AfterSaleDao afterSaleDao,
+<span class="fc" id="L101">                           ExpressDao expressDao) {</span>
+<span class="fc" id="L102">        this.afterSaleDao = afterSaleDao;</span>
+<span class="fc" id="L103">        this.regionDao = regionDao;</span>
+<span class="fc" id="L104">        this.productServiceDao = productServiceDao;</span>
+<span class="fc" id="L105">        this.serviceorderPoMapper = serviceorderPoMapper;</span>
+<span class="fc" id="L106">        this.expressDao = expressDao;</span>
+<span class="fc" id="L107">        registry.put((byte) 0, new SendFactory());</span>
+<span class="fc" id="L108">        registry.put((byte) 1, new OnSpotFactory());</span>
+<span class="fc" id="L109">    }</span>
+
+    // 根据服务类型获取不同的服务单
+    public static ServiceOrder build(ServiceOrderPo po) {
+<span class="fc" id="L113">        ServiceOrderFactory factory = registry.get(po.getType());</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (factory == null) {</span>
+<span class="nc" id="L115">            throw new IllegalArgumentException(&quot;No service found for type: &quot; + po.getType());</span>
+        }
+<span class="fc" id="L117">        return factory.create(po);</span>
+    }
+
+    public ServiceOrder findById(Long id) {
+<span class="fc" id="L121">        Optional&lt;ServiceOrderPo&gt; po = this.serviceorderPoMapper.findById(id);</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (po.isPresent()) {</span>
+<span class="fc" id="L123">            return build(po.get());</span>
+        }
+        else {
+<span class="fc" id="L126">            return null;</span>
+        }
+    }
+
+    public List&lt;ServiceOrder&gt; findOnGoingByMaintainerId(Long id) {
+<span class="fc" id="L131">        List&lt;ServiceOrderPo&gt; poList = this.serviceorderPoMapper.findByMaintainerIdAndStatus(id, ServiceOrder.GOING);</span>
+<span class="fc" id="L132">        List&lt;ServiceOrder&gt; boList = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        for (ServiceOrderPo po : poList) {</span>
+<span class="fc" id="L135">            ServiceOrder bo = build(po);</span>
+<span class="fc" id="L136">            boList.add(bo);</span>
+<span class="fc" id="L137">        }</span>
+<span class="fc" id="L138">        return boList;</span>
+    }
+
+    public String save(ServiceOrder bo, UserDto user){
+<span class="fc" id="L142">        bo.setModifier(user);</span>
+<span class="fc" id="L143">        bo.setGmtModified(LocalDateTime.now());</span>
+<span class="fc" id="L144">        ServiceOrderPo po = CloneFactory.copy(new ServiceOrderPo(), bo);</span>
+<span class="fc" id="L145">        logger.debug(&quot;save: po = {}&quot;, po);</span>
+<span class="fc" id="L146">        ServiceOrderPo updatedPo = serviceorderPoMapper.save(po);</span>
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if(IDNOTEXIST.equals(updatedPo.getId())){</span>
+<span class="nc" id="L148">            throw new BusinessException(ReturnNo.RESOURCE_ID_NOTEXIST, String.format(ReturnNo.RESOURCE_ID_NOTEXIST.getMessage(), &quot;服务单&quot;, bo.getId()));</span>
+        }
+<span class="fc" id="L150">        return String.format(KEY, bo.getId());</span>
+    }
+
+    /**
+     * 插入新的服务单
+     * @param serviceOrder
+     * @param user
+     */
+    public ServiceOrder insert(ServiceOrder serviceOrder,UserDto user){
+<span class="fc" id="L159">        serviceOrder.setId(null);</span>
+<span class="fc" id="L160">        serviceOrder.setCreator(user);</span>
+<span class="fc" id="L161">        serviceOrder.setGmtCreate(LocalDateTime.now());</span>
+<span class="fc" id="L162">        ServiceOrderPo po = CloneFactory.copy(new ServiceOrderPo(), serviceOrder);</span>
+<span class="fc" id="L163">        logger.debug(&quot;insert: po = {}&quot;, po);</span>
+<span class="fc" id="L164">        ServiceOrderPo save = this.serviceorderPoMapper.save(po);</span>
+<span class="fc" id="L165">        serviceOrder.setId(save.getId());</span>
+<span class="fc" id="L166">        return serviceOrder;</span>
+    }
+    /**
+     * 根据售后单id查找服务单
+     */
+    public ServiceOrder findByAftersalesOrderId(Long afterSaleId){
+<span class="fc" id="L172">        logger.debug(&quot;findByAftersalesOrderId: afterSaleId = {}&quot;, afterSaleId);</span>
+<span class="fc" id="L173">        ServiceOrderPo po = this.serviceorderPoMapper.findByAftersalesId(afterSaleId);</span>
+<span class="fc" id="L174">        logger.debug(&quot;findByAftersalesOrderId: po = {}&quot;, po);</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if(po == null){</span>
+<span class="fc" id="L176">            return null;</span>
+        }
+<span class="fc" id="L178">        return build(po);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

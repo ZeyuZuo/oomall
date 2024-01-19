@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServiceOrderPo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">service</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.service.mapper.po</a> &gt; <span class="el_source">ServiceOrderPo.java</span></div><h1>ServiceOrderPo.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.service.mapper.po;
+
+import cn.edu.xmu.javaee.core.aop.CopyFrom;
+import cn.edu.xmu.oomall.service.dao.bo.ServiceOrder;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = &quot;serviceorder&quot;)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+<span class="nc" id="L16">@Builder</span>
+<span class="fc" id="L17">@NoArgsConstructor</span>
+<span class="nc" id="L18">@AllArgsConstructor</span>
+@CopyFrom({ServiceOrder.class})
+public class ServiceOrderPo
+{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long productId;
+    private Long maintainerId;
+    private Long regionId;
+    private Long productServiceId;
+    private Long shopId;
+    private Long customerId;
+    private Long sendExpressId;
+    private String sendExpressBillCode;
+    private Long aftersalesId;
+    private String serviceOrderSn;
+    private Byte type;
+    private Byte status;
+    private Byte result;
+    private String description;
+    private String customerAddress;
+    private String customerPhone;
+    private String customerName;
+    private String maintainerAddress;
+    private String maintainerName;
+    private String maintainerPhone;
+    private Byte serviceType;
+    // 创建者id
+    private Long creatorId;
+    // 创建者
+    private String creatorName;
+    // 修改者id
+    private Long modifierId;
+    // 修改者
+    private String modifierName;
+    // 创建时间
+    private LocalDateTime gmtCreate;
+    // 修改时间
+    private LocalDateTime gmtModified;
+
+    public Long getId()
+    {
+<span class="fc" id="L61">        return id;</span>
+    }
+
+    public void setId(Long id)
+    {
+<span class="fc" id="L66">        id = id;</span>
+<span class="fc" id="L67">    }</span>
+
+    public Long getProductId()
+    {
+<span class="fc" id="L71">        return productId;</span>
+    }
+
+    public void setProductId(Long productId)
+    {
+<span class="fc" id="L76">        this.productId = productId;</span>
+<span class="fc" id="L77">    }</span>
+
+    public Long getMaintainerId()
+    {
+<span class="fc" id="L81">        return maintainerId;</span>
+    }
+
+    public void setMaintainerId(Long maintainerId)
+    {
+<span class="fc" id="L86">        this.maintainerId = maintainerId;</span>
+<span class="fc" id="L87">    }</span>
+
+    public Long getRegionId()
+    {
+<span class="fc" id="L91">        return regionId;</span>
+    }
+
+    public void setRegionId(Long regionId)
+    {
+<span class="fc" id="L96">        this.regionId = regionId;</span>
+<span class="fc" id="L97">    }</span>
+
+    public Long getProductServiceId()
+    {
+<span class="fc" id="L101">        return productServiceId;</span>
+    }
+
+    public void setProductServiceId(Long productServiceId)
+    {
+<span class="fc" id="L106">        this.productServiceId = productServiceId;</span>
+<span class="fc" id="L107">    }</span>
+
+    public Long getShopId()
+    {
+<span class="fc" id="L111">        return shopId;</span>
+    }
+
+    public void setShopId(Long shopId)
+    {
+<span class="fc" id="L116">        this.shopId = shopId;</span>
+<span class="fc" id="L117">    }</span>
+
+    public Long getCustomerId()
+    {
+<span class="fc" id="L121">        return customerId;</span>
+    }
+
+    public void setCustomerId(Long customerId)
+    {
+<span class="fc" id="L126">        this.customerId = customerId;</span>
+<span class="fc" id="L127">    }</span>
+
+    public Long getSendExpressId()
+    {
+<span class="fc" id="L131">        return sendExpressId;</span>
+    }
+
+    public void setSendExpressId(Long sendExpressId)
+    {
+<span class="fc" id="L136">        this.sendExpressId = sendExpressId;</span>
+<span class="fc" id="L137">    }</span>
+
+    public String getSendExpressBillCode()
+    {
+<span class="fc" id="L141">        return sendExpressBillCode;</span>
+    }
+
+    public void setSendExpressBillCode(String sendExpressBillCode)
+    {
+<span class="fc" id="L146">        this.sendExpressBillCode = sendExpressBillCode;</span>
+<span class="fc" id="L147">    }</span>
+
+    public Long getAftersalesId()
+    {
+<span class="nc" id="L151">        return aftersalesId;</span>
+    }
+
+    public void setAftersalesId(Long aftersalesId)
+    {
+<span class="nc" id="L156">        this.aftersalesId = aftersalesId;</span>
+<span class="nc" id="L157">    }</span>
+
+    public String getServiceOrderSn()
+    {
+<span class="fc" id="L161">        return serviceOrderSn;</span>
+    }
+
+    public void setServiceOrderSn(String serviceOrderSn)
+    {
+<span class="fc" id="L166">        this.serviceOrderSn = serviceOrderSn;</span>
+<span class="fc" id="L167">    }</span>
+
+    public Byte getType()
+    {
+<span class="fc" id="L171">        return type;</span>
+    }
+
+    public void setType(Byte type)
+    {
+<span class="fc" id="L176">        this.type = type;</span>
+<span class="fc" id="L177">    }</span>
+
+    public Byte getStatus()
+    {
+<span class="fc" id="L181">        return status;</span>
+    }
+
+    public void setStatus(Byte status)
+    {
+<span class="fc" id="L186">        this.status = status;</span>
+<span class="fc" id="L187">    }</span>
+
+    public Byte getResult()
+    {
+<span class="fc" id="L191">        return result;</span>
+    }
+
+    public void setResult(Byte result)
+    {
+<span class="fc" id="L196">        this.result = result;</span>
+<span class="fc" id="L197">    }</span>
+
+    public String getDescription()
+    {
+<span class="fc" id="L201">        return description;</span>
+    }
+
+    public void setDescription(String description)
+    {
+<span class="fc" id="L206">        this.description = description;</span>
+<span class="fc" id="L207">    }</span>
+
+    public String getCustomerAddress()
+    {
+<span class="fc" id="L211">        return customerAddress;</span>
+    }
+
+    public void setCustomerAddress(String customerAddress) {
+<span class="fc" id="L215">        this.customerAddress = customerAddress;</span>
+<span class="fc" id="L216">    }</span>
+
+    public String getCustomerPhone()
+    {
+<span class="fc" id="L220">        return customerPhone;</span>
+    }
+
+    public void setCustomerPhone(String customerPhone)
+    {
+<span class="fc" id="L225">        this.customerPhone = customerPhone;</span>
+<span class="fc" id="L226">    }</span>
+
+    public String getCustomerName()
+    {
+<span class="fc" id="L230">        return customerName;</span>
+    }
+
+    public void setCustomerName(String customerName)
+    {
+<span class="fc" id="L235">        this.customerName = customerName;</span>
+<span class="fc" id="L236">    }</span>
+
+    public String getMaintainerAddress() {
+<span class="fc" id="L239">        return maintainerAddress;</span>
+    }
+
+    public void setMaintainerAddress(String maintainerAddress) {
+<span class="fc" id="L243">        this.maintainerAddress = maintainerAddress;</span>
+<span class="fc" id="L244">    }</span>
+
+    public String getMaintainerName()
+    {
+<span class="fc" id="L248">        return maintainerName;</span>
+    }
+
+    public void setMaintainerName(String maintainerName)
+    {
+<span class="fc" id="L253">        this.maintainerName = maintainerName;</span>
+<span class="fc" id="L254">    }</span>
+
+    public String getMaintainerPhone()
+    {
+<span class="fc" id="L258">        return maintainerPhone;</span>
+    }
+
+    public void setMaintainerPhone(String maintainerPhone)
+    {
+<span class="fc" id="L263">        this.maintainerPhone = maintainerPhone;</span>
+<span class="fc" id="L264">    }</span>
+
+    public Long getCreatorId()
+    {
+<span class="nc" id="L268">        return creatorId;</span>
+    }
+
+    public void setCreatorId(Long creatorId)
+    {
+<span class="nc" id="L273">        this.creatorId = creatorId;</span>
+<span class="nc" id="L274">    }</span>
+
+    public String getCreatorName()
+    {
+<span class="nc" id="L278">        return creatorName;</span>
+    }
+
+    public void setCreatorName(String creatorName)
+    {
+<span class="nc" id="L283">        this.creatorName = creatorName;</span>
+<span class="nc" id="L284">    }</span>
+
+    public Long getModifierId()
+    {
+<span class="nc" id="L288">        return modifierId;</span>
+    }
+
+    public void setModifierId(Long modifierId)
+    {
+<span class="nc" id="L293">        this.modifierId = modifierId;</span>
+<span class="nc" id="L294">    }</span>
+
+    public String getModifierName()
+    {
+<span class="nc" id="L298">        return modifierName;</span>
+    }
+
+    public void setModifierName(String modifierName)
+    {
+<span class="nc" id="L303">        this.modifierName = modifierName;</span>
+<span class="nc" id="L304">    }</span>
+
+    public LocalDateTime getGmtCreate()
+    {
+<span class="fc" id="L308">        return gmtCreate;</span>
+    }
+
+    public void setGmtCreate(LocalDateTime gmtCreate)
+    {
+<span class="fc" id="L313">        this.gmtCreate = gmtCreate;</span>
+<span class="fc" id="L314">    }</span>
+
+    public LocalDateTime getGmtModified()
+    {
+<span class="fc" id="L318">        return gmtModified;</span>
+    }
+
+    public void setGmtModified(LocalDateTime gmtModified)
+    {
+<span class="fc" id="L323">        this.gmtModified = gmtModified;</span>
+<span class="fc" id="L324">    }</span>
+
+    public void setServiceType(Byte serviceType) {
+<span class="fc" id="L327">        this.serviceType = serviceType;</span>
+<span class="fc" id="L328">    }</span>
+
+    public Byte getServiceType() {
+<span class="fc" id="L331">        return serviceType;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

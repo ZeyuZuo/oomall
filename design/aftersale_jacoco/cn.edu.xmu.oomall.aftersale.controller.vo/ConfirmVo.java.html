@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfirmVo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aftersale</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.aftersale.controller.vo</a> &gt; <span class="el_source">ConfirmVo.java</span></div><h1>ConfirmVo.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.aftersale.controller.vo;
+
+import cn.edu.xmu.oomall.aftersale.mapper.openfeign.po.Consignee;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+
+
+<span class="fc" id="L11">public class ConfirmVo {</span>
+    @JsonProperty(value = &quot;confirm&quot;)
+    @NotNull(message = &quot;confirm不能为空&quot;)
+    private Boolean confirm;
+    @JsonProperty(value = &quot;conclusion&quot;)
+    @NotBlank(message = &quot;conclusion不能为空&quot;)
+    private String conclusion;
+    @JsonProperty(value = &quot;refundOnly&quot;)
+    @NotNull(message = &quot;refundOnly不能为空&quot;)
+    private Boolean refundOnly;
+    @JsonProperty(value = &quot;consignee&quot;)
+    @NotNull(message = &quot;consignee不能为空&quot;)
+    private Consignee consignee;
+
+    public Boolean getConfirm() {
+<span class="fc" id="L26">        return confirm;</span>
+    }
+    public String getConclusion() {
+<span class="fc" id="L29">        return conclusion;</span>
+    }
+    public Boolean getRefundOnly() {
+<span class="fc" id="L32">        return refundOnly;</span>
+    }
+    public Consignee getConsignee() {
+<span class="fc" id="L35">        return consignee;</span>
+    }
+    public void setConfirm(Boolean confirm) {
+<span class="fc" id="L38">        this.confirm = confirm;</span>
+<span class="fc" id="L39">    }</span>
+    public void setConclusion(String conclusion) {
+<span class="fc" id="L41">        this.conclusion = conclusion;</span>
+<span class="fc" id="L42">    }</span>
+    public void setRefundOnly(Boolean refundOnly) {
+<span class="fc" id="L44">        this.refundOnly = refundOnly;</span>
+<span class="fc" id="L45">    }</span>
+    public void setConsignee(Consignee consignee) {
+<span class="fc" id="L47">        this.consignee = consignee;</span>
+<span class="fc" id="L48">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

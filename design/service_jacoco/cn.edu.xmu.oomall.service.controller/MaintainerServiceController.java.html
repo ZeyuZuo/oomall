@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MaintainerServiceController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">service</a> &gt; <a href="index.source.html" class="el_package">cn.edu.xmu.oomall.service.controller</a> &gt; <span class="el_source">MaintainerServiceController.java</span></div><h1>MaintainerServiceController.java</h1><pre class="source lang-java linenums">package cn.edu.xmu.oomall.service.controller;
+
+import cn.edu.xmu.javaee.core.aop.Audit;
+import cn.edu.xmu.javaee.core.aop.LoginUser;
+import cn.edu.xmu.javaee.core.model.ReturnNo;
+import cn.edu.xmu.javaee.core.model.ReturnObject;
+import cn.edu.xmu.javaee.core.model.dto.UserDto;
+import cn.edu.xmu.oomall.service.controller.Dto.MaintainerMessageDto;
+import cn.edu.xmu.oomall.service.controller.Dto.ServiceOrderCreateDto;
+import cn.edu.xmu.oomall.service.controller.vo.MaintainerMessageVo;
+import cn.edu.xmu.oomall.service.controller.vo.ServiceOrderCreateVo;
+import cn.edu.xmu.oomall.service.service.ServiceOrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import cn.edu.xmu.javaee.core.util.CloneFactory;
+
+@RestController /*Restful的Controller对象*/
+@RequestMapping(value = &quot;/maintainers/{MaintainerId}&quot;, produces = &quot;application/json;charset=UTF-8&quot;)
+@Transactional
+public class MaintainerServiceController {
+<span class="fc" id="L25">    private final Logger logger = LoggerFactory.getLogger(MaintainerServiceController.class);</span>
+
+    private final ServiceOrderService serviceorderService;
+
+    @Autowired
+<span class="fc" id="L30">    public MaintainerServiceController(ServiceOrderService serviceorderService) {</span>
+<span class="fc" id="L31">        this.serviceorderService = serviceorderService;</span>
+<span class="fc" id="L32">    }</span>
+
+    /**
+     * 服务商接收服务单
+     */
+    @Audit(departName = &quot;maintainer&quot;)
+    @PutMapping(&quot;/serviceOrder/{ServiceOrderId}/accept&quot;)
+    public ReturnObject acceptServiceOrder(@PathVariable Long MaintainerId,
+                                           @PathVariable Long ServiceOrderId,
+                                           @RequestBody @Validated MaintainerMessageVo maintainerMessageVo,
+                                           @LoginUser UserDto userDto){
+<span class="fc" id="L43">        MaintainerMessageDto dto = CloneFactory.copy(new MaintainerMessageDto(), maintainerMessageVo);</span>
+<span class="fc" id="L44">        serviceorderService.acceptServiceOrder(MaintainerId,ServiceOrderId, dto, userDto);</span>
+<span class="fc" id="L45">        return new ReturnObject(ReturnNo.OK);</span>
+    }
+
+    /**
+     * 服务商撤销服务单
+     */
+    @Audit(departName = &quot;maintainer&quot;)
+    @PutMapping(&quot;/serviceOrder/{ServiceOrderId}/cancel&quot;)
+    public ReturnObject cancelServiceOrder( @PathVariable Long MaintainerId,
+                                            @PathVariable Long ServiceOrderId,
+                                            @LoginUser UserDto userDto){
+
+<span class="fc" id="L57">        serviceorderService.cancelServiceOrder(MaintainerId,ServiceOrderId, userDto);</span>
+<span class="fc" id="L58">        return new ReturnObject(ReturnNo.OK);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
